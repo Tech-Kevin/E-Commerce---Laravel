@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Models;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\Conversions\Manipulations;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Relations\belongsTo;
+use App\Models\Category;
+use App\Models\Subcategory;
+
+class Product extends Model implements HasMedia
+{
+    use InteractsWithMedia;
+    protected $fillable = [
+        'name',
+        'description',
+        'full_description',
+        'sku',
+        'price',
+        'sale_price',
+        'stock',
+        'category',
+        'brand',
+        'image',
+        'is_active',
+        'is_featured',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'sale_price' => 'decimal:2',
+        'gallery' => 'array',
+        'is_active' => 'boolean',
+        'is_featured' => 'boolean',
+    ];
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('product_image')->singleFile();
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class)->withPivot('quantity');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class);
+    }
+}
