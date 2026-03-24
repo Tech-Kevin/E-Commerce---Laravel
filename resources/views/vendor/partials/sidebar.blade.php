@@ -18,27 +18,27 @@
             <span>Products</span>
         </a>
 
-        <a href="#" class="vendor-nav-item">
+        <a href="{{ route('vendor.orders') }}" class="vendor-nav-item {{ request()->routeIs('vendor.orders') ? 'active' : '' }}">
             <i class="fa-solid fa-bag-shopping"></i>
             <span>Orders</span>
         </a>
 
-        <a href="#" class="vendor-nav-item">
+        <a href="{{ route('vendor.customers') }}" class="vendor-nav-item {{ request()->routeIs('vendor.customers') ? 'active' : '' }}">
             <i class="fa-solid fa-users"></i>
             <span>Customers</span>
         </a>
 
-        <a href="#" class="vendor-nav-item">
+        <a href="{{ route('vendor.analytics') }}" class="vendor-nav-item {{ request()->routeIs('vendor.analytics') ? 'active' : '' }}">
             <i class="fa-solid fa-chart-pie"></i>
             <span>Analytics</span>
         </a>
 
-        <a href="#" class="vendor-nav-item">
+        <a href="{{ route('vendor.earnings') }}" class="vendor-nav-item {{ request()->routeIs('vendor.earnings') ? 'active' : '' }}">
             <i class="fa-solid fa-wallet"></i>
             <span>Earnings</span>
         </a>
 
-        <a href="#" class="vendor-nav-item">
+        <a href="{{ route('vendor.settings') }}" class="vendor-nav-item {{ request()->routeIs('vendor.settings') ? 'active' : '' }}">
             <i class="fa-solid fa-gear"></i>
             <span>Settings</span>
         </a>

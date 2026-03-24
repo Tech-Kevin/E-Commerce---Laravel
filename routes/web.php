@@ -26,7 +26,14 @@ Route::prefix('vendor')->group(function () {
     Route::put('products/{id}/edit', [ProductController::class, 'update'])->name('vendor.product.update');
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('vendor.product.destroy');
     Route::get('subcategories/{categoryId}', [ProductController::class, 'getSubcategories'])->name('vendor.subcategories');
-});
+
+    //testing routes
+    Route::get('orders', [VendorController::class, 'ShowOrders'])->name('vendor.orders');
+    Route::get('customers', [VendorController::class, 'ShowCustomers'])->name('vendor.customers');
+    Route::get('analytics', [VendorController::class, 'ShowAnalytics'])->name('vendor.analytics');
+    Route::get('earnings', [VendorController::class, 'ShowEarnings'])->name('vendor.earnings');
+    Route::get('settings', [VendorController::class, 'ShowSettings'])->name('vendor.settings');
+    });
 
 
 Route::prefix('customer')->group(function () {
@@ -37,7 +44,7 @@ Route::prefix('customer')->group(function () {
     Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/cart/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
-    
+
     //testing routes
     Route::get('/profile', [CustomerController::class, 'ShowProfile'])->name('customer.profile');
     Route::get('/wishlist', [CustomerController::class, 'ShowWishlist'])->name('customer.wishlist');
