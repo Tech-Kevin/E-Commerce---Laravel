@@ -9,40 +9,45 @@
         <div class="card-header">
             <div>
                 <h3>Store Settings</h3>
-                <p class="card-subtext">Update basic store information</p>
+                <p class="card-subtext">Update your account and store information</p>
             </div>
         </div>
 
-        <form class="settings-form">
+        @if($errors->any())
+            <div style="background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+                <ul style="margin:0; padding-left:16px;">
+                    @foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form class="settings-form" action="{{ route('vendor.settings.update') }}" method="POST">
+            @csrf
+            @method('PUT')
             <div class="form-grid">
                 <div class="form-group">
-                    <label class="form-label">Store Name</label>
-                    <input type="text" class="form-control" value="ShopPanel Store">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Store Email</label>
-                    <input type="email" class="form-control" value="vendor@shoppanel.com">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}">
                 </div>
 
                 <div class="form-group full-width">
-                    <label class="form-label">Store Address</label>
-                    <input type="text" class="form-control" value="Ahmedabad, Gujarat, India">
+                    <label class="form-label">Address</label>
+                    <input type="text" name="address" class="form-control" value="{{ old('address', $user->address) }}">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Contact Number</label>
-                    <input type="text" class="form-control" value="+91 98765 43210">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Currency</label>
-                    <input type="text" class="form-control" value="INR">
+                    <input type="text" name="number" class="form-control" value="{{ old('number', $user->number) }}">
                 </div>
             </div>
 
             <div class="product-form-actions">
-                <button type="button" class="product-submit-btn">Save Settings</button>
+                <button type="submit" class="product-submit-btn">Save Settings</button>
             </div>
         </form>
     </div>

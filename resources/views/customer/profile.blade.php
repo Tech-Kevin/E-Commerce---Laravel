@@ -12,35 +12,59 @@
                 </div>
             </div>
 
+            @if(session('success'))
+                <div class="alert alert-success" style="background:#d4edda;border:1px solid #c3e6cb;color:#155724;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <div class="profile-card">
                 <div class="profile-top">
-                    <div class="profile-avatar">K</div>
+                    <div class="profile-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                     <div>
-                        <h3>Kevin Patel</h3>
-                        <p>kevin@example.com</p>
+                        <h3>{{ Auth::user()->name }}</h3>
+                        <p>{{ Auth::user()->email }}</p>
                     </div>
                 </div>
 
-                <div class="checkout-grid">
-                    <div class="form-group">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" value="Kevin Patel">
+                <form action="{{ route('customer.profile.update') }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    @if($errors->any())
+                        <div class="alert alert-error" style="background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+                            <ul style="margin:0; padding-left:16px;">
+                                @foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <div class="checkout-grid">
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" value="{{ old('name', Auth::user()->name) }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" value="{{ old('email', Auth::user()->email) }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="number" class="form-control" value="{{ old('number', Auth::user()->number) }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <input type="text" name="address" class="form-control" value="{{ old('address', Auth::user()->address) }}">
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="kevin@example.com">
+                    <div class="profile-actions">
+                        <button type="submit" class="primary-btn">Save Changes</button>
                     </div>
-
-                    <div class="form-group full-width">
-                        <label class="form-label">Address</label>
-                        <input type="text" class="form-control" value="Ahmedabad, Gujarat">
-                    </div>
-                </div>
-
-                <div class="profile-actions">
-                    <button class="primary-btn">Save Changes</button>
-                </div>
+                </form>
             </div>
         </div>
     </section>

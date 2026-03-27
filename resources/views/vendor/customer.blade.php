@@ -9,46 +9,25 @@
         <div class="card-header">
             <div>
                 <h3>Customer List</h3>
-                <p class="card-subtext">Recent and active buyers from your store</p>
+                <p class="card-subtext">Registered customers on your store</p>
             </div>
         </div>
 
+        @if($customers->isEmpty())
+            <p style="padding: 24px; color: #8a7769; text-align: center;">No customers registered yet.</p>
+        @else
         <div class="customer-grid">
+            @foreach($customers as $customer)
             <div class="customer-card">
-                <div class="customer-avatar">R</div>
+                <div class="customer-avatar">{{ strtoupper(substr($customer->name, 0, 1)) }}</div>
                 <div class="customer-info">
-                    <h4>Rahul Mehta</h4>
-                    <p>rahul@example.com</p>
-                    <span>12 Orders</span>
+                    <h4>{{ $customer->name }}</h4>
+                    <p>{{ $customer->email }}</p>
+                    <span>{{ $customer->orders_count }} order(s)</span>
                 </div>
             </div>
-
-            <div class="customer-card">
-                <div class="customer-avatar">P</div>
-                <div class="customer-info">
-                    <h4>Priya Shah</h4>
-                    <p>priya@example.com</p>
-                    <span>8 Orders</span>
-                </div>
-            </div>
-
-            <div class="customer-card">
-                <div class="customer-avatar">A</div>
-                <div class="customer-info">
-                    <h4>Amit Patel</h4>
-                    <p>amit@example.com</p>
-                    <span>5 Orders</span>
-                </div>
-            </div>
-
-            <div class="customer-card">
-                <div class="customer-avatar">N</div>
-                <div class="customer-info">
-                    <h4>Neha Joshi</h4>
-                    <p>neha@example.com</p>
-                    <span>9 Orders</span>
-                </div>
-            </div>
+            @endforeach
         </div>
+        @endif
     </div>
 @endsection

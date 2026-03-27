@@ -38,12 +38,16 @@
             </div>
 
             <div class="category-grid">
-                <div class="category-card">Electronics</div>
-                <div class="category-card">Fashion</div>
-                <div class="category-card">Accessories</div>
-                <div class="category-card">Home Decor</div>
-                <div class="category-card">Beauty</div>
-                <div class="category-card">Footwear</div>
+                {{-- <div class="category-card">Electronics</div> --}}
+                @php
+                    $activecategory = request()->query('category');
+                @endphp
+                @foreach($categories as $cat)
+                    <a href="{{ route('home', ['category' => $cat->name]) }}"
+                       class="category-card {{ $activecategory == $cat->name ? 'active' : '' }}">
+                        {{ $cat->name }}
+                    </a>
+                @endforeach
             </div>
         </div>
     </section>
@@ -57,6 +61,10 @@
                 </div>
                 <a href="#" class="section-link">View All</a>
             </div>
+
+            @if (request('category'))
+                <p class="filter-label">Showing results for "<strong>{{ request('category') }}</strong>"</p>
+            @endif
 
             <div class="products-grid">
                 @foreach ($products as $product)
@@ -72,7 +80,7 @@
                         </div>
 
                         <div class="product-card-body">
-                            <span class="product-category">{{ $product->category ?? 'General' }}</span>
+                            <span class="product-category">{{ $product->category->name ?? 'General' }}</span>
                             <h3>{{ $product->name }}</h3>
                             <p>{{ $product->description }}</p>
 

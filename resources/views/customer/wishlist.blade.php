@@ -12,29 +12,82 @@
                 </div>
             </div>
 
+            @if(session('success'))
+                <div class="alert alert-success" style="background:#d4edda;border:1px solid #c3e6cb;color:#155724;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if($wishlistItems->isEmpty())
+                <div class="empty-state">
+                    <i class="fa-regular fa-heart"></i>
+                    <h3>Your wishlist is empty</h3>
+                    <a href="{{ route('home') }}" class="primary-btn">Browse Products</a>
+                </div>
+            @else
             <div class="products-grid">
+                @foreach($wishlistItems as $item)
+                @php $product = $item->product; @endphp
+                @if($product)
                 <div class="product-card">
                     <div class="product-image-wrap">
-                        <div class="product-placeholder">
-                            <i class="fa-solid fa-box-open"></i>
-                        </div>
+                        @if($product->getFirstMediaUrl('product_image'))
+                            <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-img">
+                        @else
+                            <div class="product-placeholder">
+                                <i class="fa-solid fa-box-open"></i>
+                            </div>
+                        @endif
                     </div>
                     <div class="product-card-body">
-                        <span class="product-category">Accessories</span>
-                        <h3>Smart Watch</h3>
-                        <p>Stylish and functional watch for daily use</p>
+                        <span class="product-category">{{ $product->category->name ?? '' }}</span>
+                        <h3>{{ $product->name }}</h3>
+                        <p>{{ $product->description }}</p>
                         <div class="product-meta">
-                            <span class="regular-price">₹3,999</span>
+                            @if($product->sale_price)
+                                <span class="sale-price">₹{{ number_format($product->sale_price, 2) }}</span>
+                                <span class="regular-price strike">₹{{ number_format($product->price, 2) }}</span>
+                            @else
+                                <span class="regular-price">₹{{ number_format($product->price, 2) }}</span>
+                            @endif
                         </div>
                         <div class="product-actions">
-                            <a href="#" class="product-btn">Move to Cart</a>
-                            <button class="wishlist-btn">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <button class="product-btn add-to-cart-btn" data-id="{{ $product->id }}">Move to Cart</button>
+                            <form action="{{ route('wishlist.remove', $product->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="wishlist-btn">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
+                @endif
+                @endforeach
             </div>
+            @endif
         </div>
     </section>
+
+    <script>
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.dataset.id;
+            fetch(`/customer/cart/add/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status) {
+                    window.location.href = '{{ route("cart.index") }}';
+                }
+            });
+        });
+    });
+    </script>
 @endsection

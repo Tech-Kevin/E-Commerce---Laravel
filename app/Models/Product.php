@@ -24,7 +24,8 @@ class Product extends Model implements HasMedia
         'price',
         'sale_price',
         'stock',
-        'category',
+        'category_id',
+        'subcategory_id',
         'brand',
         'image',
         'is_active',
@@ -45,12 +46,12 @@ class Product extends Model implements HasMedia
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class)->withPivot('quantity');
+        return $this->belongsToMany(Order::class, 'order_items', 'product_id', 'order_id')->withPivot('quantity');
     }
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class , 'category_id');
     }
 
     public function subcategory()

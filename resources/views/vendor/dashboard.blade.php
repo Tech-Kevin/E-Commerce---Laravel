@@ -11,9 +11,9 @@
                 <i class="fa-solid fa-indian-rupee-sign"></i>
             </div>
             <div class="stats-card-info">
-                <h3>Total Sales</h3>
-                <h2>₹48,500</h2>
-                <p>+12.5% from last week</p>
+                <h3>Total Revenue</h3>
+                <h2>₹ {{ number_format($totalRevenue, 2) }}</h2>
+                <p>All completed orders</p>
             </div>
         </div>
 
@@ -23,8 +23,8 @@
             </div>
             <div class="stats-card-info">
                 <h3>Total Orders</h3>
-                <h2>320</h2>
-                <p>+8 new orders today</p>
+                <h2>{{ $totalOrders }}</h2>
+                <p>All time orders</p>
             </div>
         </div>
 
@@ -34,8 +34,8 @@
             </div>
             <div class="stats-card-info">
                 <h3>Total Products</h3>
-                <h2>85</h2>
-                <p>12 low stock items</p>
+                <h2>{{ $totalProducts }}</h2>
+                <p>Listed in store</p>
             </div>
         </div>
 
@@ -45,8 +45,8 @@
             </div>
             <div class="stats-card-info">
                 <h3>Total Customers</h3>
-                <h2>1,240</h2>
-                <p>+24 joined this month</p>
+                <h2>{{ $totalCustomers }}</h2>
+                <p>Registered customers</p>
             </div>
         </div>
     </section>
@@ -55,7 +55,7 @@
         <div class="dashboard-card large-card">
             <div class="card-header">
                 <h3>Recent Orders</h3>
-                <a href="#" class="card-link">View All</a>
+                <a href="{{ route('vendor.orders') }}" class="card-link">View All</a>
             </div>
 
             <div class="table-wrapper">
@@ -64,40 +64,35 @@
                         <tr>
                             <th>Order ID</th>
                             <th>Customer</th>
-                            <th>Product</th>
+                            <th>Items</th>
                             <th>Status</th>
                             <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse($recentOrders as $order)
                         <tr>
-                            <td>#ORD1025</td>
-                            <td>Rahul Shah</td>
-                            <td>Wireless Headphones</td>
-                            <td><span class="status-badge processing">Processing</span></td>
-                            <td>₹2,499</td>
+                            <td>#{{ $order->order_number }}</td>
+                            <td>{{ $order->user->name ?? $order->full_name }}</td>
+                            <td>{{ $order->items->count() }} item(s)</td>
+                            <td>
+                                <select class="order-status-select status-{{ $order->status }}"
+                                        data-id="{{ $order->id }}"
+                                        data-url="{{ route('vendor.order.status', $order->id) }}">
+                                    @foreach(['pending','processing','shipped','arriving','delivered','cancelled'] as $s)
+                                        <option value="{{ $s }}" {{ $order->status === $s ? 'selected' : '' }}>
+                                            {{ ucfirst($s) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>₹ {{ number_format($order->grand_total, 2) }}</td>
                         </tr>
+                        @empty
                         <tr>
-                            <td>#ORD1024</td>
-                            <td>Neha Patel</td>
-                            <td>Smart Watch</td>
-                            <td><span class="status-badge delivered">Delivered</span></td>
-                            <td>₹3,999</td>
+                            <td colspan="5" style="text-align:center; padding: 24px; color: #8a7769;">No orders yet.</td>
                         </tr>
-                        <tr>
-                            <td>#ORD1023</td>
-                            <td>Amit Joshi</td>
-                            <td>Bluetooth Speaker</td>
-                            <td><span class="status-badge pending">Pending</span></td>
-                            <td>₹1,699</td>
-                        </tr>
-                        <tr>
-                            <td>#ORD1022</td>
-                            <td>Priya Mehta</td>
-                            <td>Phone Cover</td>
-                            <td><span class="status-badge delivered">Delivered</span></td>
-                            <td>₹499</td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -109,38 +104,46 @@
             </div>
 
             <div class="product-list">
+                @forelse($topProducts as $product)
                 <div class="product-item">
-                    <div class="product-thumb">P</div>
+                    <div class="product-thumb">{{ strtoupper(substr($product->name, 0, 1)) }}</div>
                     <div class="product-details">
-                        <h4>Wireless Headphones</h4>
-                        <p>120 sales</p>
+                        <h4>{{ $product->name }}</h4>
+                        <p>{{ $product->orders_count }} order(s)</p>
                     </div>
                 </div>
-
-                <div class="product-item">
-                    <div class="product-thumb">P</div>
-                    <div class="product-details">
-                        <h4>Smart Watch</h4>
-                        <p>98 sales</p>
-                    </div>
-                </div>
-
-                <div class="product-item">
-                    <div class="product-thumb">P</div>
-                    <div class="product-details">
-                        <h4>Bluetooth Speaker</h4>
-                        <p>76 sales</p>
-                    </div>
-                </div>
-
-                <div class="product-item">
-                    <div class="product-thumb">P</div>
-                    <div class="product-details">
-                        <h4>Mobile Stand</h4>
-                        <p>61 sales</p>
-                    </div>
-                </div>
+                @empty
+                <p style="color: #8a7769; padding: 16px 0;">No products yet.</p>
+                @endforelse
             </div>
         </div>
     </section>
+
+@push('scripts')
+<script>
+document.querySelectorAll('.order-status-select').forEach(function(select) {
+    select.addEventListener('change', function() {
+        const url    = this.dataset.url;
+        const status = this.value;
+        const el     = this;
+
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ status }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                el.className = 'order-status-select status-' + data.status;
+            }
+        })
+        .catch(() => alert('Failed to update status.'));
+    });
+});
+</script>
+@endpush
 @endsection

@@ -19,45 +19,31 @@
                     <tr>
                         <th>Order ID</th>
                         <th>Customer</th>
-                        <th>Products</th>
+                        <th>Items</th>
                         <th>Status</th>
                         <th>Date</th>
                         <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($orders as $order)
                     <tr>
-                        <td>#ORD1001</td>
-                        <td>Rahul Mehta</td>
-                        <td>2 Items</td>
-                        <td><span class="status-badge processing">Processing</span></td>
-                        <td>24 Mar 2026</td>
-                        <td>₹2,499</td>
+                        <td>#{{ $order->order_number }}</td>
+                        <td>{{ $order->user->name ?? $order->full_name }}</td>
+                        <td>{{ $order->items->count() }} item(s)</td>
+                        <td>
+                            <span class="status-badge {{ $order->status === 'delivered' ? 'delivered' : ($order->status === 'cancelled' ? 'pending' : 'processing') }}">
+                                {{ ucfirst($order->status) }}
+                            </span>
+                        </td>
+                        <td>{{ $order->created_at->format('d M Y') }}</td>
+                        <td>₹ {{ number_format($order->grand_total, 2) }}</td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>#ORD1002</td>
-                        <td>Priya Shah</td>
-                        <td>1 Item</td>
-                        <td><span class="status-badge delivered">Delivered</span></td>
-                        <td>23 Mar 2026</td>
-                        <td>₹5,299</td>
+                        <td colspan="6" style="text-align:center; padding: 32px; color: #8a7769;">No orders yet.</td>
                     </tr>
-                    <tr>
-                        <td>#ORD1003</td>
-                        <td>Amit Patel</td>
-                        <td>3 Items</td>
-                        <td><span class="status-badge pending">Pending</span></td>
-                        <td>22 Mar 2026</td>
-                        <td>₹8,999</td>
-                    </tr>
-                    <tr>
-                        <td>#ORD1004</td>
-                        <td>Neha Joshi</td>
-                        <td>1 Item</td>
-                        <td><span class="status-badge delivered">Delivered</span></td>
-                        <td>21 Mar 2026</td>
-                        <td>₹1,199</td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

@@ -79,8 +79,8 @@ class ProductController extends Controller
         $product->price = $data['price'];
         $product->sale_price = $data['sale_price'] ?? null;
         $product->stock = $data['stock'];
-        $product->category = $data['category_id'];
-        $product->subcategory = $data['subcategory_id'];
+        $product->category_id = $data['category_id'];
+        $product->subcategory_id = $data['subcategory_id'];
         $product->brand = $data['brand'] ?? null;
 
 

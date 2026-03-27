@@ -1508,3 +1508,50 @@ body.modal-open {
         margin-left: 0;
     }
 }
+
+.order-status-select {
+    border: none;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 22px;
+    transition: background-color 0.2s;
+}
+
+.order-status-select.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.order-status-select.status-processing {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.order-status-select.status-shipped {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.order-status-select.status-arriving {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.order-status-select.status-delivered {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.order-status-select.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}

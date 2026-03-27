@@ -574,4 +574,30 @@
         });
     }
 </script>
+<script>
+    const categorySelect = document.getElementById('category_id');
+    const subcategorySelect = document.getElementById('subcategory_id');
+
+    categorySelect.addEventListener('change', function () {
+        let categoryId = this.value;
+
+        // reset subcategory
+        subcategorySelect.innerHTML = '<option value="">Loading...</option>';
+
+        if (categoryId) {
+            fetch(`/get-subcategories/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+
+                    data.forEach(sub => {
+                        subcategorySelect.innerHTML += 
+                            `<option value="${sub.id}">${sub.name}</option>`;
+                    });
+                });
+        } else {
+            subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
+        }
+    });
+</script>
 @endsection

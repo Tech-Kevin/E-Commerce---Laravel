@@ -1173,3 +1173,8 @@ a {
         height: 180px;
     }
 }
+
+.category-card.active {
+    border: 2px solid #ff8c42;
+    background: #fff4ec;
+}
