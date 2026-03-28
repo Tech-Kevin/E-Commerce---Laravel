@@ -59,11 +59,17 @@
                     <h2>Featured Products</h2>
                     <p>Top picks for you</p>
                 </div>
-                <a href="#" class="section-link">View All</a>
+                <a href="{{ route('home') }}" class="section-link">View All</a>
             </div>
 
-            @if (request('category'))
+            @if (request('search'))
+                <p class="filter-label">Search results for "<strong>{{ request('search') }}</strong>"</p>
+            @elseif (request('category'))
                 <p class="filter-label">Showing results for "<strong>{{ request('category') }}</strong>"</p>
+            @endif
+
+            @if ($products->isEmpty())
+                <p class="filter-label">No products found.</p>
             @endif
 
             <div class="products-grid">

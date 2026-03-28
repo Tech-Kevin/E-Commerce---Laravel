@@ -33,7 +33,19 @@ class VendorController extends Controller
             'status' => ['required', Rule::in(['pending', 'processing', 'shipped', 'arriving', 'delivered', 'cancelled'])],
         ]);
 
-        $order->update(['status' => $request->status]);
+        $previousStatus = $order->status;
+        $newStatus = $request->status;
+
+        $order->update(['status' => $newStatus]);
+
+        // Deduct stock when status changes to 'shipped' (only once)
+        if ($newStatus === 'shipped' && $previousStatus !== 'shipped') {
+            foreach ($order->items as $item) {
+                Product::where('id', $item->product_id)
+                    ->where('stock', '>', 0)
+                    ->decrement('stock', $item->quantity);
+            }
+        }
 
         return response()->json(['success' => true, 'status' => $order->status]);
     }

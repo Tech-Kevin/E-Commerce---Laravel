@@ -1,9 +1,9 @@
 <header class="store-header">
     <div class="store-container header-inner">
         <a href="{{ route('home') }}" class="store-logo">
-            <div class="store-logo-icon">S</div>
+            <div class="store-logo-icon">E</div>
             <div>
-                <h2>ShopPanel</h2>
+                <h2>Ekka_Lv</h2>
                 <p>Online Store</p>
             </div>
         </a>
