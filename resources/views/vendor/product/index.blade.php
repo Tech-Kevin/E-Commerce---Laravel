@@ -106,9 +106,12 @@
                                 </td>
                             </tr>
                         @endif
+                        
                     </tbody>
                 </table>
+              
             </div>
+            
 
         </div>
     </div>
@@ -453,7 +456,6 @@
             document.getElementById('edit_description').value = description ?? '';
             document.getElementById('edit_full_description').value = fullDescription ?? '';
             document.getElementById('edit_sku').value = sku ?? '';
-            document.getElementById('edit_category').value = category ?? '';
             document.getElementById('edit_brand').value = brand ?? '';
             document.getElementById('edit_stock').value = stock ?? '';
             document.getElementById('edit_price').value = price ?? '';
@@ -573,31 +575,5 @@
             loadSubcategories(this.value, editSubcategorySelect);
         });
     }
-</script>
-<script>
-    const categorySelect = document.getElementById('category_id');
-    const subcategorySelect = document.getElementById('subcategory_id');
-
-    categorySelect.addEventListener('change', function () {
-        let categoryId = this.value;
-
-        // reset subcategory
-        subcategorySelect.innerHTML = '<option value="">Loading...</option>';
-
-        if (categoryId) {
-            fetch(`/get-subcategories/${categoryId}`)
-                .then(response => response.json())
-                .then(data => {
-                    subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
-
-                    data.forEach(sub => {
-                        subcategorySelect.innerHTML += 
-                            `<option value="${sub.id}">${sub.name}</option>`;
-                    });
-                });
-        } else {
-            subcategorySelect.innerHTML = '<option value="">Select Subcategory</option>';
-        }
-    });
 </script>
 @endsection

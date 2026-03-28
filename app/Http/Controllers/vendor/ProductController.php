@@ -10,6 +10,7 @@ use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductReq;
 use Illuminate\Support\Facades\Log;
+
 class ProductController extends Controller
 {
     public function index()

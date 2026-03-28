@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -59,6 +63,26 @@ class OrderController extends Controller
         }
 
         session()->forget('cart');
+
+        // Load relationships needed for invoice/email
+        $order->load('items');
+
+        // Send confirmation email with PDF invoice
+        $userEmail = Auth::user()->email;
+        try {
+            Mail::to($userEmail)->send(new OrderConfirmationMail($order));
+        } catch (\Throwable $e) {
+            Log::error('Order email failed: ' . $e->getMessage(), ['order' => $order->order_number]);
+        }
+
+        // Send SMS notification
+        try {
+            $sms     = app(SmsService::class);
+            $message = "Hi {$order->full_name}, your order #{$order->order_number} has been placed successfully! Total: Rs.{$order->grand_total}. Thank you for shopping with Ekka_Lv.";
+            $sms->send($order->phone, $message);
+        } catch (\Throwable $e) {
+            Log::error('Order SMS failed: ' . $e->getMessage(), ['order' => $order->order_number]);
+        }
 
         return redirect()->route('customer.orders')->with('success', 'Order placed successfully! Order #' . $order->order_number);
     }

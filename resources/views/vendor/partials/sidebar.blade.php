@@ -1,8 +1,8 @@
 <aside class="vendor-sidebar">
     <div class="vendor-brand">
-        <div class="vendor-brand-icon">S</div>
+        <div class="vendor-brand-icon">E</div>
         <div class="vendor-brand-text">
-            <h2>ShopPanel</h2>
+            <h2>Ekka_Lv</h2>
             <p>Vendor Hub</p>
         </div>
     </div>
@@ -45,9 +45,12 @@
     </nav>
 
     <div class="vendor-sidebar-footer">
-        <a href="#" class="vendor-logout-btn">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Logout</span>
-        </a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="vendor-logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+        </form>
     </div>
 </aside>

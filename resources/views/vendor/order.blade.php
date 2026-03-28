@@ -32,9 +32,15 @@
                         <td>{{ $order->user->name ?? $order->full_name }}</td>
                         <td>{{ $order->items->count() }} item(s)</td>
                         <td>
-                            <span class="status-badge {{ $order->status === 'delivered' ? 'delivered' : ($order->status === 'cancelled' ? 'pending' : 'processing') }}">
-                                {{ ucfirst($order->status) }}
-                            </span>
+                            <select class="order-status-select status-{{ $order->status }}"
+                                    data-id="{{ $order->id }}"
+                                    data-url="{{ route('vendor.order.status', $order->id) }}">
+                                @foreach(['pending','processing','shipped','arriving','delivered','cancelled'] as $s)
+                                    <option value="{{ $s }}" {{ $order->status === $s ? 'selected' : '' }}>
+                                        {{ ucfirst($s) }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </td>
                         <td>{{ $order->created_at->format('d M Y') }}</td>
                         <td>₹ {{ number_format($order->grand_total, 2) }}</td>
@@ -48,4 +54,32 @@
             </table>
         </div>
     </div>
+
+@push('scripts')
+<script>
+document.querySelectorAll('.order-status-select').forEach(function(select) {
+    select.addEventListener('change', function() {
+        const url    = this.dataset.url;
+        const status = this.value;
+        const el     = this;
+
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ status }),
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                el.className = 'order-status-select status-' + data.status;
+            }
+        })
+        .catch(() => alert('Failed to update status.'));
+    });
+});
+</script>
+@endpush
 @endsection

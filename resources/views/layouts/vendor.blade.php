@@ -35,12 +35,6 @@
                             <span>Store Manager</span>
                         </div>
                     </div>
-                    <form action="{{ route('logout') }}" method="POST" style="margin-left:12px;">
-                        @csrf
-                        <button type="submit" style="background:none;border:1px solid #f2e7dc;color:#8a7769;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px;">
-                            <i class="fa-solid fa-right-from-bracket"></i> Logout
-                        </button>
-                    </form>
                 </div>
             </header>
 
