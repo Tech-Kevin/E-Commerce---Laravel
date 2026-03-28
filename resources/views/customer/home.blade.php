@@ -150,38 +150,9 @@
         </div>
     </section>
 
-    {{-- Toast --}}
-    <div id="toast" style="
-        display:none; position:fixed; bottom:28px; right:28px; z-index:9999;
-        background:#2f241f; color:#fff; padding:14px 22px; border-radius:12px;
-        font-size:14px; font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,.18);
-        transition:opacity .3s ease;"></div>
+    <div id="toast"></div>
 
-    <script>
-    function showToast(message, success) {
-        const t = document.getElementById('toast');
-        t.textContent = message;
-        t.style.background = success ? '#2f241f' : '#c0392b';
-        t.style.display = 'block'; t.style.opacity = '1';
-        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); }, 2500);
-    }
-
-    document.querySelectorAll('.wishlist-toggle-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const id = this.dataset.id;
-            const icon = this.querySelector('i');
-            fetch(`/customer/wishlist/toggle/${id}`, {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' }
-            })
-            .then(r => r.json())
-            .then(data => {
-                showToast(data.message, data.status);
-                icon.className = data.in_wishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-                icon.style.color = data.in_wishlist ? '#e05a2b' : '';
-            })
-            .catch(() => showToast('Something went wrong.', false));
-        });
-    });
-    </script>
+@push('scripts')
+    <script src="{{ asset('js/customer/home.js') }}"></script>
+@endpush
 @endsection

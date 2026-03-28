@@ -52,7 +52,7 @@
                             @endif
                         </div>
                         <div class="product-actions">
-                            <button class="product-btn add-to-cart-btn" data-id="{{ $product->id }}">Move to Cart</button>
+                            <button class="product-btn add-to-cart-btn" data-id="{{ $product->id }}" data-cart-url="{{ route('cart.index') }}">Move to Cart</button>
                             <form action="{{ route('wishlist.remove', $product->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
@@ -70,24 +70,7 @@
         </div>
     </section>
 
-    <script>
-    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const id = this.dataset.id;
-            fetch(`/customer/cart/add/${id}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.status) {
-                    window.location.href = '{{ route("cart.index") }}';
-                }
-            });
-        });
-    });
-    </script>
+@push('scripts')
+    <script src="{{ asset('js/customer/wishlist.js') }}"></script>
+@endpush
 @endsection

@@ -44,15 +44,7 @@
         </div>
     </div>
     @stack('scripts')
-    <script>
-    setTimeout(() => {
-        const flash = document.getElementById('flash-message');
-        if (flash) {
-            flash.style.animation = "fadeOut 0.5s ease forwards";
-            setTimeout(() => flash.remove(), 500);
-        }
-    }, 3000);
-</script>
+    <script src="{{ asset('js/vendor/layout.js') }}"></script>
 </body>
 
 </html>

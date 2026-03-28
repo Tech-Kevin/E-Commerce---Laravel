@@ -3,13 +3,7 @@
 @section('title', $data->name)
 
 @section('content')
-    {{-- Toast Notification --}}
-    <div id="toast" style="
-        display:none; position:fixed; bottom:28px; right:28px; z-index:9999;
-        background:#2f241f; color:#fff; padding:14px 22px; border-radius:12px;
-        font-size:14px; font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,.18);
-        transition:opacity .3s ease;">
-    </div>
+    <div id="toast"></div>
 
     <section class="page-section">
         <div class="store-container">
@@ -110,54 +104,7 @@
         </div>
     </section>
 
-    <script>
-        const csrfToken = '{{ csrf_token() }}';
-
-        function showToast(message, success = true) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.style.background = success ? '#2f241f' : '#c0392b';
-            toast.style.display = 'block';
-            toast.style.opacity = '1';
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.style.display = 'none', 300);
-            }, 2500);
-        }
-
-        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const productId = this.dataset.id;
-                fetch(`/customer/cart/add/${productId}`, {
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
-                })
-                .then(r => r.json())
-                .then(data => showToast(data.message, data.status))
-                .catch(() => showToast('Something went wrong.', false));
-            });
-        });
-
-        document.querySelectorAll('.wishlist-toggle-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const id = this.dataset.id;
-                fetch(`/customer/wishlist/toggle/${id}`, {
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }
-                })
-                .then(r => r.json())
-                .then(data => {
-                    showToast(data.message, data.status);
-                    if (data.in_wishlist) {
-                        this.innerHTML = '<i class="fa-solid fa-heart" style="margin-right:6px;"></i>In Wishlist';
-                        this.style.color = '#e05a2b';
-                    } else {
-                        this.innerHTML = '<i class="fa-regular fa-heart" style="margin-right:6px;"></i>Add to Wishlist';
-                        this.style.color = '';
-                    }
-                })
-                .catch(() => showToast('Something went wrong.', false));
-            });
-        });
-    </script>
+@push('scripts')
+    <script src="{{ asset('js/customer/product-details.js') }}"></script>
+@endpush
 @endsection
