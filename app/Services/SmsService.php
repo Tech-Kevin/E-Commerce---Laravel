@@ -20,7 +20,6 @@ class SmsService
             return false;
         }
 
-        // Ensure phone has country code (default +91 for India if missing)
         if (!str_starts_with($phone, '+')) {
             $phone = '+91' . preg_replace('/^0/', '', trim($phone));
         }
