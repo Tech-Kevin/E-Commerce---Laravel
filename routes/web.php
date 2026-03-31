@@ -31,6 +31,7 @@ Route::post('logout', function () {
 Route::prefix('customer')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('product-details/{id}', [HomeController::class, 'productDetails'])->name('product.details');
+    Route::get('category/{slug}', [HomeController::class, 'categoryProducts'])->name('category.products');
 
     // Cart — session-based, no login required
     Route::get('cart', [CartController::class, 'index'])->name('cart.index');

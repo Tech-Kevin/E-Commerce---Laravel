@@ -15,6 +15,16 @@
 
         <nav class="store-nav">
             <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+            <div class="nav-dropdown">
+                <a href="#" class="nav-dropdown-trigger {{ request()->routeIs('category.products') ? 'active' : '' }}">
+                    Category <i class="fa-solid fa-chevron-down" style="font-size:11px; margin-left:4px;"></i>
+                </a>
+                <div class="nav-dropdown-menu">
+                    @foreach($navCategories as $cat)
+                        <a href="{{ route('category.products', $cat->slug ?? $cat->id) }}" class="nav-dropdown-item">{{ $cat->name }}</a>
+                    @endforeach
+                </div>
+            </div>
             <a href="{{ route('customer.orders') }}" class="{{ request()->routeIs('customer.orders') ? 'active' : '' }}">Orders</a>
         </nav>
 
