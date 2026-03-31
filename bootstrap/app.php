@@ -11,7 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->redirectGuestsTo(fn () => route('loginForm'));
+        $middleware->redirectUsersTo(function () {
+            $user = auth()->user();
+            return $user?->role === 'vendor' ? route('vendor.dashboard') : route('home');
+        });
+        $middleware->alias([
+            'customer' => \App\Http\Middleware\CustomerMiddleware::class,
+            'vendor'   => \App\Http\Middleware\VendorMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -23,9 +23,9 @@ class loginController extends Controller
             $user = Auth::user();
 
             if ($user->role == 'customer') {
-                return redirect()->route('home');
+                return redirect()->intended(route('home'));
             } elseif ($user->role == 'vendor') {
-                return redirect()->route('vendor.dashboard');
+                return redirect()->intended(route('vendor.dashboard'));
             }
         } else {
             return redirect()->route('loginForm')->with('error', 'Invalid credentials');
