@@ -893,6 +893,28 @@ a {
 .details-main-image {
     height: 420px;
     border-radius: 20px;
+    overflow: hidden;
+    background: #fff5ec;
+}
+
+.details-main-image .main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 10px;
+}
+
+/* Suggested Products */
+.suggested-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid #f2e7dc;
+}
+
+.suggested-section h2 {
+    font-size: 24px;
+    color: #2f241f;
+    margin-bottom: 20px;
 }
 
 .details-content-card h1 {

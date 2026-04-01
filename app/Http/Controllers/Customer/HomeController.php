@@ -88,7 +88,12 @@ class HomeController extends Controller
 
      public function productDetails(Request $request){
         $data = Product::findOrFail($request->id);
-        return view('customer.product-details', compact('data'));
+        $suggestedProducts = Product::where('category_id', $data->category_id)
+            ->where('id', '!=', $data->id)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get();
+        return view('customer.product-details', compact('data', 'suggestedProducts'));
     }
 
     public function addToCart(Request $request){

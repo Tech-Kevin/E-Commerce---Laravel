@@ -101,6 +101,45 @@
                     @endif
                 </div>
             </div>
+            @if($suggestedProducts->isNotEmpty())
+            <div class="suggested-section">
+                <h2>You May Also Like</h2>
+                <div class="products-grid">
+                    @foreach($suggestedProducts as $product)
+                        <div class="product-card">
+                            <div class="product-image-wrap">
+                                @if($product->getFirstMediaUrl('product_image'))
+                                    <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
+                                @else
+                                    <div class="product-placeholder">
+                                        <i class="fa-solid fa-box-open"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="product-card-body">
+                                <span class="product-category">{{ $product->category->name ?? 'General' }}</span>
+                                <h3>{{ $product->name }}</h3>
+                                <p>{{ $product->description }}</p>
+                                <div class="product-meta">
+                                    <div class="price-block">
+                                        @if($product->sale_price)
+                                            <span class="old-price">₹{{ $product->price }}</span>
+                                            <span class="sale-price">₹{{ $product->sale_price }}</span>
+                                        @else
+                                            <span class="sale-price">₹{{ $product->price }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <a href="{{ route('product.details', $product->id) }}" class="primary-btn" style="text-align:center; margin-top:10px; display:block; text-decoration:none;">
+                                    View Details
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
         </div>
     </section>
 
