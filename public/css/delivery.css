@@ -6,7 +6,7 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #f5f8fa;
+    background: #f8f6f3;
     color: #2f2f2f;
 }
 
@@ -24,7 +24,7 @@ a {
 .vendor-sidebar {
     width: 270px;
     background: #ffffff;
-    border-right: 1px solid #dde8f0;
+    border-right: 1px solid #eee4d8;
     padding: 24px 18px;
     display: flex;
     flex-direction: column;
@@ -46,7 +46,7 @@ a {
     width: 46px;
     height: 46px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #5b9bd5, #3a7bd5);
+    background: linear-gradient(135deg, #f3b37a, #e88a4f);
     color: #fff;
     display: flex;
     align-items: center;
@@ -57,13 +57,13 @@ a {
 
 .vendor-brand-text h2 {
     font-size: 20px;
-    color: #1e2d3d;
+    color: #2d241f;
     margin-bottom: 3px;
 }
 
 .vendor-brand-text p {
     font-size: 13px;
-    color: #6b8299;
+    color: #8b7769;
 }
 
 .vendor-nav {
@@ -79,7 +79,7 @@ a {
     gap: 12px;
     padding: 14px 16px;
     border-radius: 14px;
-    color: #4a5d6e;
+    color: #5c4d43;
     font-size: 15px;
     font-weight: 600;
     transition: all 0.25s ease;
@@ -91,13 +91,13 @@ a {
 }
 
 .vendor-nav-item:hover {
-    background: #eef4fb;
-    color: #3a7bd5;
+    background: #fff5ec;
+    color: #dd7f45;
 }
 
 .vendor-nav-item.active {
-    background: linear-gradient(135deg, #e4eef8, #d6e5f5);
-    color: #2c6ec4;
+    background: #fff5ec;
+    color: #dd7f45;
 }
 
 .vendor-sidebar-footer {
@@ -138,20 +138,20 @@ a {
     margin-bottom: 28px;
     padding: 24px 28px;
     background: #ffffff;
-    border: 1px solid #dde8f0;
+    border: 1px solid #eee4d8;
     border-radius: 22px;
     box-shadow: 0 10px 30px rgba(10, 25, 40, 0.04);
 }
 
 .vendor-header-left h1 {
     font-size: 30px;
-    color: #1e2d3d;
+    color: #2d241f;
     margin-bottom: 6px;
 }
 
 .vendor-header-left p {
     font-size: 14px;
-    color: #6b8299;
+    color: #8a7769;
 }
 
 .vendor-profile {
@@ -168,7 +168,7 @@ a {
     width: 42px;
     height: 42px;
     border-radius: 12px;
-    background: linear-gradient(135deg, #5b9bd5, #3a7bd5);
+    background: linear-gradient(135deg, #f2af78, #e58650);
     color: white;
     display: flex;
     align-items: center;
@@ -293,7 +293,7 @@ a {
 .card-link {
     font-size: 14px;
     font-weight: 600;
-    color: #3a7bd5;
+    color: #de7e43;
 }
 
 .card-subtext {
@@ -689,7 +689,7 @@ a {
     height: 52px;
     border: none;
     border-radius: 14px;
-    background: linear-gradient(135deg, #5b9bd5, #3a7bd5);
+    background: linear-gradient(135deg, #f29d62, #e67e4d);
     color: #ffffff;
     font-size: 15px;
     font-weight: 700;
@@ -699,7 +699,7 @@ a {
 
 .product-submit-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(58, 123, 213, 0.22);
+    box-shadow: 0 12px 24px rgba(230, 126, 77, 0.22);
 }
 
 /* Flash Message */

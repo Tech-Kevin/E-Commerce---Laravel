@@ -1,7 +1,7 @@
 document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
-        const id      = this.dataset.id;
-        const cartUrl = this.dataset.cartUrl;
+        var id      = this.dataset.id;
+        var cartUrl = this.dataset.cartUrl;
 
         fetch('/customer/cart/add/' + id, {
             method: 'POST',
@@ -10,9 +10,10 @@ document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
                 'Content-Type': 'application/json'
             }
         })
-        .then(r => r.json())
-        .then(data => {
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
             if (data.status) {
+                updateBadge('cart-count', data.cart_count);
                 window.location.href = cartUrl;
             }
         });

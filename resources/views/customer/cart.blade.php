@@ -41,7 +41,7 @@
                                 <div class="cart-item-info">
                                     <span class="cart-item-badge">In Cart</span>
                                     <h3>{{ $item['name'] }}</h3>
-                                    <p>{{ $item['description'] }}</p>
+                                    {{-- <p>{{ $item['description'] }}</p> --}}
                                     <div class="cart-price-row">
                                         <span class="cart-sale-price">₹ {{ number_format($price, 2) }}</span>
                                     </div>

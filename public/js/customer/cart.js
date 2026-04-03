@@ -41,6 +41,8 @@ function removeCartItem(productId) {
             document.getElementById('cart-shipping').innerText    = '₹ ' + data.shipping;
             document.getElementById('cart-grand-total').innerText = '₹ ' + data.grand_total;
 
+            updateBadge('cart-count', data.cart_count);
+
             if (data.cart_count === 0) {
                 location.reload();
             }

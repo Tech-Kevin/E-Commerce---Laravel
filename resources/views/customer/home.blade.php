@@ -74,7 +74,7 @@
 
             <div class="products-grid">
                 @foreach ($products as $product)
-                    <div class="product-card">
+                    <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card">
                         <div class="product-image-wrap">
                             @if($product->getFirstMediaUrl('product_image'))
                                 <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
@@ -88,7 +88,6 @@
                         <div class="product-card-body">
                             <span class="product-category">{{ $product->category->name ?? 'General' }}</span>
                             <h3>{{ $product->name }}</h3>
-                            <p>{{ $product->description }}</p>
 
                             <div class="product-meta">
                                 <div class="price-block">
@@ -108,7 +107,7 @@
                             </div>
 
                             <div class="product-actions">
-                                <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-btn">View Details</a>
+                                <span class="product-btn">View Details</span>
                                 @auth
                                 <button class="wishlist-btn wishlist-toggle-btn" data-id="{{ $product->id }}" id="wl-{{ $product->id }}">
                                     <i class="fa-regular fa-heart"></i>
@@ -116,7 +115,7 @@
                                 @endauth
                             </div>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>

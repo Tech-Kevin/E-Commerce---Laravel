@@ -1,3 +1,16 @@
+// Badge counter helper (used across pages)
+function updateBadge(id, count) {
+    var badge = document.getElementById(id);
+    if (!badge) return;
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = '';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+// User dropdown
 document.addEventListener('click', function (e) {
     document.querySelectorAll('.user-dropdown.open').forEach(function (d) {
         if (!d.parentElement.contains(e.target)) {

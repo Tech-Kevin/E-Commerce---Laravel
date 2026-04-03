@@ -25,10 +25,13 @@ class WishlistController extends Controller
             $message = 'Added to wishlist.';
         }
 
+        $wishlistCount = Wishlist::where('user_id', Auth::id())->count();
+
         return response()->json([
-            'status'      => true,
-            'in_wishlist' => $inWishlist,
-            'message'     => $message,
+            'status'         => true,
+            'in_wishlist'    => $inWishlist,
+            'message'        => $message,
+            'wishlist_count' => $wishlistCount,
         ]);
     }
 

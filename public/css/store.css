@@ -132,6 +132,25 @@ a {
     gap: 8px;
     color: #5c4d43;
     font-weight: 600;
+    position: relative;
+}
+
+.header-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #e67e4d;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 /* Nav Dropdown */
@@ -646,6 +665,17 @@ a {
     border-radius: 22px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(40, 25, 10, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-card:hover {
+    box-shadow: 0 14px 40px rgba(40, 25, 10, 0.1);
+    transform: translateY(-2px);
 }
 
 .product-image-wrap {
@@ -679,6 +709,9 @@ a {
 
 .product-card-body {
     padding: 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .product-category {
@@ -753,6 +786,7 @@ a {
 .product-actions {
     display: flex;
     gap: 10px;
+    margin-top: auto;
 }
 
 .product-btn {

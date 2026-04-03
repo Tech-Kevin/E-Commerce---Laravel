@@ -32,11 +32,13 @@
             <a href="{{ route('customer.wishlist') }}" class="header-icon-btn">
                 <i class="fa-regular fa-heart"></i>
                 <span>Wishlist</span>
+                <span class="header-badge" id="wishlist-count" style="{{ $wishlistCount > 0 ? '' : 'display:none;' }}">{{ $wishlistCount }}</span>
             </a>
 
             <a href="{{ route('cart.index') }}" class="header-icon-btn">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>Cart</span>
+                <span class="header-badge" id="cart-count" style="{{ $cartCount > 0 ? '' : 'display:none;' }}">{{ $cartCount }}</span>
             </a>
 
             @auth
