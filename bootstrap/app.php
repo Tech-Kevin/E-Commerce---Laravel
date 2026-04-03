@@ -14,11 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('loginForm'));
         $middleware->redirectUsersTo(function () {
             $user = auth()->user();
-            return $user?->role === 'vendor' ? route('vendor.dashboard') : route('home');
+            if ($user?->role === 'vendor') return route('vendor.dashboard');
+            if ($user?->role === 'delivery') return route('delivery.dashboard');
+            return route('home');
         });
         $middleware->alias([
             'customer' => \App\Http\Middleware\CustomerMiddleware::class,
             'vendor'   => \App\Http\Middleware\VendorMiddleware::class,
+            'delivery' => \App\Http\Middleware\DeliveryMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

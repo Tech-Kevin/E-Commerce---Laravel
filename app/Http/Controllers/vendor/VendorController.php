@@ -50,10 +50,27 @@ class VendorController extends Controller
         return response()->json(['success' => true, 'status' => $order->status]);
     }
 
+    public function assignDeliveryBoy(Request $request, Order $order)
+    {
+        $request->validate([
+            'delivery_boy_id' => 'required|exists:users,id',
+        ]);
+
+        $deliveryBoy = User::where('id', $request->delivery_boy_id)->where('role', 'delivery')->firstOrFail();
+
+        $order->update(['delivery_boy_id' => $deliveryBoy->id]);
+
+        return response()->json([
+            'success' => true,
+            'delivery_boy_name' => $deliveryBoy->name,
+        ]);
+    }
+
     public function ShowOrders()
     {
-        $orders = Order::with(['user', 'items'])->latest()->get();
-        return view('vendor.order', compact('orders'));
+        $orders = Order::with(['user', 'items', 'deliveryBoy'])->latest()->get();
+        $deliveryBoys = User::where('role', 'delivery')->get();
+        return view('vendor.order', compact('orders', 'deliveryBoys'));
     }
 
     public function ShowCustomers()

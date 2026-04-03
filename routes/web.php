@@ -7,6 +7,7 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\WishlistController;
+use App\Http\Controllers\delivery\DeliveryController;
 use App\Http\Controllers\vendor\ProductController;
 use App\Http\Controllers\vendor\VendorController;
 use Illuminate\Support\Facades\Auth;
@@ -57,6 +58,20 @@ Route::prefix('customer')->middleware('customer')->group(function () {
     Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 });
 
+// Delivery routes — login required
+Route::prefix('delivery')->middleware('delivery')->group(function () {
+    Route::get('home', [DeliveryController::class, 'index'])->name('delivery.dashboard');
+    Route::get('orders', [DeliveryController::class, 'assignedOrders'])->name('delivery.orders');
+    Route::get('completed', [DeliveryController::class, 'completedOrders'])->name('delivery.completed');
+    Route::patch('orders/{order}/status', [DeliveryController::class, 'updateStatus'])->name('delivery.update.status');
+    Route::get('orders/{order}/verify', [DeliveryController::class, 'showVerifyPage'])->name('delivery.verify');
+    Route::post('orders/{order}/send-otp', [DeliveryController::class, 'sendOtp'])->name('delivery.send.otp');
+    Route::post('orders/{order}/verify-otp', [DeliveryController::class, 'verifyOtp'])->name('delivery.verify.otp');
+    Route::post('orders/{order}/confirm', [DeliveryController::class, 'confirmDelivery'])->name('delivery.confirm');
+    Route::get('settings', [DeliveryController::class, 'settings'])->name('delivery.settings');
+    Route::put('settings/update', [DeliveryController::class, 'updateSettings'])->name('delivery.settings.update');
+});
+
 // Vendor routes — login required
 Route::prefix('vendor')->middleware('vendor')->group(function () {
     Route::get('home', [VendorController::class, 'index'])->name('vendor.dashboard');
@@ -69,6 +84,7 @@ Route::prefix('vendor')->middleware('vendor')->group(function () {
 
     Route::get('orders', [VendorController::class, 'ShowOrders'])->name('vendor.orders');
     Route::patch('orders/{order}/status', [VendorController::class, 'updateOrderStatus'])->name('vendor.order.status');
+    Route::patch('orders/{order}/assign-delivery', [VendorController::class, 'assignDeliveryBoy'])->name('vendor.order.assign.delivery');
     Route::get('customers', [VendorController::class, 'ShowCustomers'])->name('vendor.customers');
     Route::get('analytics', [VendorController::class, 'ShowAnalytics'])->name('vendor.analytics');
     Route::get('earnings', [VendorController::class, 'ShowEarnings'])->name('vendor.earnings');

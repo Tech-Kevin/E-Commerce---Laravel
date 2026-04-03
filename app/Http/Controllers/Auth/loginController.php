@@ -26,6 +26,8 @@ class loginController extends Controller
                 return redirect()->intended(route('home'));
             } elseif ($user->role == 'vendor') {
                 return redirect()->intended(route('vendor.dashboard'));
+            } elseif ($user->role == 'delivery') {
+                return redirect()->intended(route('delivery.dashboard'));
             }
         } else {
             return redirect()->route('loginForm')->with('error', 'Invalid credentials');

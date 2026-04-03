@@ -1551,7 +1551,39 @@ body.modal-open {
     color: #155724;
 }
 
+.order-status-select.status-picked_up {
+    background-color: #e2e3f1;
+    color: #383d6e;
+}
+
+.order-status-select.status-on_the_way {
+    background-color: #e6f7ff;
+    color: #0c5460;
+}
+
+.order-status-select.status-completed {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
 .order-status-select.status-cancelled {
     background-color: #f8d7da;
     color: #721c24;
+}
+
+.order-delivery-select {
+    border: 1px solid #e6d8cc;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    background: #fffdfb;
+    color: #4a3d36;
+    transition: border-color 0.2s;
+}
+
+.order-delivery-select:focus {
+    border-color: #e49a67;
 }

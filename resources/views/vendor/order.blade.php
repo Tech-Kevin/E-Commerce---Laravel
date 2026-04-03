@@ -21,6 +21,7 @@
                         <th>Customer</th>
                         <th>Items</th>
                         <th>Status</th>
+                        <th>Delivery Boy</th>
                         <th>Date</th>
                         <th>Amount</th>
                     </tr>
@@ -35,9 +36,21 @@
                             <select class="order-status-select status-{{ $order->status }}"
                                     data-id="{{ $order->id }}"
                                     data-url="{{ route('vendor.order.status', $order->id) }}">
-                                @foreach(['pending','processing','shipped','arriving','delivered','cancelled'] as $s)
+                                @foreach(['pending','processing','shipped','arriving','picked_up','on_the_way','completed','delivered','cancelled'] as $s)
                                     <option value="{{ $s }}" {{ $order->status === $s ? 'selected' : '' }}>
                                         {{ ucfirst($s) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <select class="order-delivery-select"
+                                    data-id="{{ $order->id }}"
+                                    data-url="{{ route('vendor.order.assign.delivery', $order->id) }}">
+                                <option value="">-- Assign --</option>
+                                @foreach($deliveryBoys as $boy)
+                                    <option value="{{ $boy->id }}" {{ $order->delivery_boy_id == $boy->id ? 'selected' : '' }}>
+                                        {{ $boy->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -47,7 +60,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" style="text-align:center; padding: 32px; color: #8a7769;">No orders yet.</td>
+                        <td colspan="7" style="text-align:center; padding: 32px; color: #8a7769;">No orders yet.</td>
                     </tr>
                     @endforelse
                 </tbody>
