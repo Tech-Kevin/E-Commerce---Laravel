@@ -86,7 +86,7 @@
                         </div>
 
                         <div class="product-card-body">
-                            <span class="product-category">{{ $product->category->name ?? 'General' }}</span>
+                            {{-- <span class="product-category">{{ $product->category->name ?? 'General' }}</span> --}}
                             <h3>{{ $product->name }}</h3>
 
                             <div class="product-meta">

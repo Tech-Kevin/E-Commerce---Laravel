@@ -117,9 +117,9 @@
                                 @endif
                             </div>
                             <div class="product-card-body">
-                                <span class="product-category">{{ $product->category->name ?? 'General' }}</span>
+                                {{-- <span class="product-category">{{ $product->category->name ?? 'General' }}</span> --}}
                                 <h3>{{ $product->name }}</h3>
-                                <p>{{ $product->description }}</p>
+                                {{-- <p>{{ $product->description }}</p> --}}
                                 <div class="product-meta">
                                     <div class="price-block">
                                         @if($product->sale_price)

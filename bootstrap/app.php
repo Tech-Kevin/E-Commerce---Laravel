@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\CustomerMiddleware;
+use App\Http\Middleware\DeliveryMiddleware;
+use App\Http\Middleware\VendorMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,9 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             return route('home');
         });
         $middleware->alias([
-            'customer' => \App\Http\Middleware\CustomerMiddleware::class,
-            'vendor'   => \App\Http\Middleware\VendorMiddleware::class,
-            'delivery' => \App\Http\Middleware\DeliveryMiddleware::class,
+            'customer' => CustomerMiddleware::class,
+            'vendor'   => VendorMiddleware::class,
+            'delivery' => DeliveryMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
