@@ -47,6 +47,8 @@ Route::prefix('customer')->middleware('customer')->group(function () {
     Route::get('/checkout', [HomeController::class, 'ShowCheckout'])->name('customer.checkout');
     Route::post('/checkout/place', [OrderController::class, 'placeOrder'])->name('order.place');
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.orders');
+    Route::post('/razorpay/verify', [OrderController::class, 'razorpayVerify'])->name('razorpay.verify');
+    Route::get('/razorpay/cancel', [OrderController::class, 'razorpayCancel'])->name('razorpay.cancel');
 
     // Profile
     Route::get('/profile', [CustomerController::class, 'ShowProfile'])->name('customer.profile');

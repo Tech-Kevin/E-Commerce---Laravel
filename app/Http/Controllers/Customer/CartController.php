@@ -30,7 +30,11 @@ class CartController extends Controller
         $cart = session()->get('cart',[]);
         
         if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
+            return response()->json([
+                'status' => false,
+                'message' => 'This product is already in your cart.',
+                'cart_count' => count($cart),
+            ]);
         } else {
             $cart[$id] = [
                 'id' => $product->id,

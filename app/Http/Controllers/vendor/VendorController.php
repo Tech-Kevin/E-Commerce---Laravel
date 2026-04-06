@@ -18,7 +18,7 @@ class VendorController extends Controller
         $totalOrders   = Order::count();
         $totalCustomers = User::where('role', 'customer')->count();
         $totalRevenue  = Order::where('status', '!=', 'cancelled')->sum('grand_total');
-        $recentOrders  = Order::with(['user', 'items'])->latest()->take(5)->get();
+        $recentOrders  = Order::with(['user', 'items'])->latest()->take(8)->get();
         $topProducts   = Product::withCount('orders')->orderByDesc('orders_count')->take(5)->get();
 
         return view('vendor.dashboard', compact(

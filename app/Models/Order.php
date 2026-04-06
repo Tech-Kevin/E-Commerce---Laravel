@@ -21,6 +21,7 @@ class Order extends Model
         'status',
         'payment_method',
         'payment_status',
+        'razorpay_payment_id',
     ];
 
     public function user()

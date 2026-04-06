@@ -76,6 +76,7 @@
                                 <label class="form-label">Payment Method</label>
                                 <select name="payment_method" class="form-control">
                                     <option value="cod">Cash on Delivery</option>
+                                    <option value="razorpay">Razorpay (Online Payment)</option>
                                 </select>
                             </div>
                         </div>

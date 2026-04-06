@@ -130,9 +130,16 @@
                                         @endif
                                     </div>
                                 </div>
-                                <a href="{{ route('product.details', $product->id) }}" class="primary-btn" style="text-align:center; margin-top:10px; display:block; text-decoration:none;">
-                                    View Details
-                                </a>
+                                <div class="product-actions">
+                                    <a href="{{ route('product.details', $product->id) }}" class="product-btn" style="text-decoration:none;">
+                                        View Details
+                                    </a>
+                                    @auth
+                                    <button class="wishlist-btn wishlist-toggle-btn" data-id="{{ $product->id }}" id="wl-{{ $product->id }}">
+                                        <i class="fa-regular fa-heart"></i>
+                                    </button>
+                                    @endauth
+                                </div>
                             </div>
                         </div>
                     @endforeach
