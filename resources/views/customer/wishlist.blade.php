@@ -19,11 +19,14 @@
             @endif
 
             @if($wishlistItems->isEmpty())
-                <div class="empty-state">
-                    <i class="fa-regular fa-heart"></i>
-                    <h3>Your wishlist is empty</h3>
-                    <a href="{{ route('home') }}" class="primary-btn">Browse Products</a>
+                <div class="table-card empty-cart-card">
+                <div class="empty-cart-content">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <h3>Your Wishlist is empty</h3>
+                    <p>Looks like you have not added anything yet.</p>
+                    <a href="{{ route('home') }}" class="primary-btn">Continue Shopping</a>
                 </div>
+            </div>
             @else
             <div class="products-grid">
                 @foreach($wishlistItems as $item)
@@ -45,10 +48,10 @@
                         <p>{{ $product->description }}</p>
                         <div class="product-meta">
                             @if($product->sale_price)
-                                <span class="sale-price">₹{{ number_format($product->sale_price, 2) }}</span>
+                                <span class="sale-price">₹ {{ number_format($product->sale_price, 2) }}</span>
                                 <span class="regular-price strike">₹{{ number_format($product->price, 2) }}</span>
                             @else
-                                <span class="regular-price">₹{{ number_format($product->price, 2) }}</span>
+                                <span class="regular-price">₹ {{ number_format($product->price, 2) }}</span>
                             @endif
                         </div>
                         <div class="product-actions">

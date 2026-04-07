@@ -92,10 +92,10 @@
                             <div class="product-meta">
                                 <div class="price-block">
                                     @if($product->sale_price)
-                                        <span class="old-price">₹{{ $product->price }}</span>
-                                        <span class="sale-price">₹{{ $product->sale_price }}</span>
+                                        <span class="old-price">₹ {{ $product->price }}</span>
+                                        <span class="sale-price">₹ {{ $product->sale_price }}</span>
                                     @else
-                                        <span class="regular-price">₹{{ $product->price }}</span>
+                                        <span class="regular-price">₹ {{ $product->price }}</span>
                                     @endif
                                 </div>
 

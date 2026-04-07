@@ -99,7 +99,7 @@
             <div class="table-card empty-cart-card">
                 <div class="empty-cart-content">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <h3>Your cart is empty</h3>
+                    <h3>Your Cart is empty</h3>
                     <p>Looks like you have not added anything yet.</p>
                     <a href="{{ route('home') }}" class="primary-btn">Continue Shopping</a>
                 </div>

@@ -88,7 +88,7 @@
                         @foreach($cart as $item)
                             <div class="summary-row">
                                 <span>{{ $item['name'] }} × {{ $item['quantity'] }}</span>
-                                <span>₹{{ number_format(($item['sale_price'] ?? $item['price']) * $item['quantity'], 2) }}</span>
+                                <span>₹ {{ number_format(($item['sale_price'] ?? $item['price']) * $item['quantity'], 2) }}</span>
                             </div>
                         @endforeach
 
@@ -96,15 +96,15 @@
 
                         <div class="summary-row">
                             <span>Subtotal</span>
-                            <span>₹{{ number_format($subtotal, 2) }}</span>
+                            <span>₹ {{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="summary-row">
                             <span>Shipping</span>
-                            <span>₹{{ number_format($shipping, 2) }}</span>
+                            <span>₹ {{ number_format($shipping, 2) }}</span>
                         </div>
                         <div class="summary-row total">
                             <span>Total</span>
-                            <span>₹{{ number_format($grandTotal, 2) }}</span>
+                            <span>₹ {{ number_format($grandTotal, 2) }}</span>
                         </div>
                         <button type="submit" class="primary-btn full-btn">Place Order</button>
                     </div>

@@ -203,10 +203,10 @@
                     <tr>
                         <td>{{ $i + 1 }}</td>
                         <td>{{ $item->product_name }}</td>
-                        <td>₹{{ number_format($item->price, 2) }}</td>
+                        <td>₹ {{ number_format($item->price, 2) }}</td>
                         <td>{{ $item->quantity }}</td>
-                        <td>₹{{ number_format($item->shipping_charge, 2) }}</td>
-                        <td style="text-align:right;">₹{{ number_format($item->price * $item->quantity, 2) }}</td>
+                        <td>₹ {{ number_format($item->shipping_charge, 2) }}</td>
+                        <td style="text-align:right;">₹ {{ number_format($item->price * $item->quantity, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -216,15 +216,15 @@
             <table class="totals-table">
                 <tr>
                     <td>Subtotal</td>
-                    <td style="text-align:right;">₹{{ number_format($order->subtotal, 2) }}</td>
+                    <td style="text-align:right;">₹ {{ number_format($order->subtotal, 2) }}</td>
                 </tr>
                 <tr>
                     <td>Shipping Charges</td>
-                    <td style="text-align:right;">₹{{ number_format($order->shipping, 2) }}</td>
+                    <td style="text-align:right;">₹ {{ number_format($order->shipping, 2) }}</td>
                 </tr>
                 <tr class="grand-row">
                     <td>Grand Total</td>
-                    <td style="text-align:right;">₹{{ number_format($order->grand_total, 2) }}</td>
+                    <td style="text-align:right;">₹ {{ number_format($order->grand_total, 2) }}</td>
                 </tr>
             </table>
         </div>

@@ -140,23 +140,23 @@
                         <tr>
                             <td>{{ $item->product_name }}</td>
                             <td>{{ $item->quantity }}</td>
-                            <td>₹{{ number_format($item->price, 2) }}</td>
-                            <td>₹{{ number_format($item->price * $item->quantity, 2) }}</td>
+                            <td>₹ {{ number_format($item->price, 2) }}</td>
+                            <td>₹ {{ number_format($item->price * $item->quantity, 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
                 <tfoot class="totals">
                     <tr>
                         <td colspan="3">Subtotal</td>
-                        <td>₹{{ number_format($order->subtotal, 2) }}</td>
+                        <td>₹ {{ number_format($order->subtotal, 2) }}</td>
                     </tr>
                     <tr>
                         <td colspan="3">Shipping</td>
-                        <td>₹{{ number_format($order->shipping, 2) }}</td>
+                        <td>₹ {{ number_format($order->shipping, 2) }}</td>
                     </tr>
                     <tr class="grand">
                         <td colspan="3">Grand Total</td>
-                        <td>₹{{ number_format($order->grand_total, 2) }}</td>
+                        <td>₹ {{ number_format($order->grand_total, 2) }}</td>
                     </tr>
                 </tfoot>
             </table>

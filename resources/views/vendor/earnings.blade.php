@@ -12,7 +12,7 @@
             </div>
             <div class="stats-card-info">
                 <h3>Total Revenue</h3>
-                <h2>₹1,48,500</h2>
+                <h2>₹ 1,48,500</h2>
                 <p>All-time earnings</p>
             </div>
         </div>
@@ -23,7 +23,7 @@
             </div>
             <div class="stats-card-info">
                 <h3>This Month</h3>
-                <h2>₹24,800</h2>
+                <h2>₹ 24,800</h2>
                 <p>+12% vs last month</p>
             </div>
         </div>
@@ -34,7 +34,7 @@
             </div>
             <div class="stats-card-info">
                 <h3>Pending Payout</h3>
-                <h2>₹8,500</h2>
+                <h2>₹ 8,500</h2>
                 <p>Next payout cycle</p>
             </div>
         </div>
@@ -45,7 +45,7 @@
             </div>
             <div class="stats-card-info">
                 <h3>Avg Order Value</h3>
-                <h2>₹2,950</h2>
+                <h2>₹ 2,950</h2>
                 <p>Per order estimate</p>
             </div>
         </div>
@@ -73,21 +73,21 @@
                         <td>20 Mar 2026</td>
                         <td>Bank Transfer</td>
                         <td><span class="status-badge delivered">Completed</span></td>
-                        <td>₹12,000</td>
+                        <td>₹ 12,000</td>
                     </tr>
                     <tr>
                         <td>#PAY1002</td>
                         <td>10 Mar 2026</td>
                         <td>UPI</td>
                         <td><span class="status-badge delivered">Completed</span></td>
-                        <td>₹8,500</td>
+                        <td>₹ 8,500</td>
                     </tr>
                     <tr>
                         <td>#PAY1003</td>
                         <td>01 Mar 2026</td>
                         <td>Bank Transfer</td>
                         <td><span class="status-badge processing">Processing</span></td>
-                        <td>₹6,000</td>
+                        <td>₹ 6,000</td>
                     </tr>
                 </tbody>
             </table>

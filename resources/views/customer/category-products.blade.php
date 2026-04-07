@@ -91,11 +91,11 @@
                             @if(request('min_price') || request('max_price'))
                                 <span class="active-filter-tag">
                                     @if(request('min_price') && request('max_price'))
-                                        ₹{{ request('min_price') }} - ₹{{ request('max_price') }}
+                                        ₹ {{ request('min_price') }} - ₹ {{ request('max_price') }}
                                     @elseif(request('min_price'))
-                                        From ₹{{ request('min_price') }}
+                                        From ₹ {{ request('min_price') }}
                                     @else
-                                        Up to ₹{{ request('max_price') }}
+                                        Up to ₹ {{ request('max_price') }}
                                     @endif
                                 </span>
                             @endif
@@ -132,10 +132,10 @@
                                         <div class="product-meta">
                                             <div class="price-block">
                                                 @if($product->sale_price)
-                                                    <span class="old-price">₹{{ $product->price }}</span>
-                                                    <span class="sale-price">₹{{ $product->sale_price }}</span>
+                                                    <span class="old-price">₹ {{ $product->price }}</span>
+                                                    <span class="sale-price">₹ {{ $product->sale_price }}</span>
                                                 @else
-                                                    <span class="regular-price">₹{{ $product->price }}</span>
+                                                    <span class="regular-price">₹ {{ $product->price }}</span>
                                                 @endif
                                             </div>
 

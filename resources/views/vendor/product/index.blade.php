@@ -87,11 +87,11 @@
                                     </span>
                                 </td>
 
-                                <td>₹{{ $product->price }}</td>
+                                <td>₹ {{ $product->price }}</td>
 
                                 <td>
                                     @if($product->sale_price)
-                                        <span class="sale-price">₹{{ $product->sale_price }}</span>
+                                        <span class="sale-price">₹ {{ $product->sale_price }}</span>
                                     @else
                                         <span class="no-sale">—</span>
                                     @endif

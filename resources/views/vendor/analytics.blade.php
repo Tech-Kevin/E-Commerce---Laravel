@@ -12,7 +12,7 @@
             </div>
             <div class="stats-card-info">
                 <h3>Total Revenue</h3>
-                <h2>₹1,48,500</h2>
+                <h2>₹ 1,48,500</h2>
                 <p>+18.4% this month</p>
             </div>
         </div>
@@ -144,7 +144,7 @@
                     <div class="analytics-product-rank">2</div>
                     <div class="analytics-product-info">
                         <h4>Smart Watch</h4>
-                        <p>280 sales • ₹39,500 revenue</p>
+                        <p>280 sales • ₹ 39,500 revenue</p>
                     </div>
                     <span class="analytics-product-growth">+14%</span>
                 </div>
@@ -153,7 +153,7 @@
                     <div class="analytics-product-rank">3</div>
                     <div class="analytics-product-info">
                         <h4>Bluetooth Speaker</h4>
-                        <p>210 sales • ₹29,800 revenue</p>
+                        <p>210 sales • ₹ 29,800 revenue</p>
                     </div>
                     <span class="analytics-product-growth">+11%</span>
                 </div>
@@ -162,7 +162,7 @@
                     <div class="analytics-product-rank">4</div>
                     <div class="analytics-product-info">
                         <h4>Phone Cover</h4>
-                        <p>180 sales • ₹16,200 revenue</p>
+                        <p>180 sales • ₹ 16,200 revenue</p>
                     </div>
                     <span class="analytics-product-growth">+9%</span>
                 </div>

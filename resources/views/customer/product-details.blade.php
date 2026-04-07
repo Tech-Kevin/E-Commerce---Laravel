@@ -39,14 +39,14 @@
                     <div class="details-price">
                         @if($data->sale_price)
                             <span class="sale-price" style="font-size:28px; font-weight:700; color:#e05a2b;">
-                                ₹{{ number_format($data->sale_price, 2) }}
+                                ₹ {{ number_format($data->sale_price, 2) }}
                             </span>
                             <span class="old-price" style="font-size:18px; color:#aaa; text-decoration:line-through; margin-left:10px;">
-                                ₹{{ number_format($data->price, 2) }}
+                                ₹ {{ number_format($data->price, 2) }}
                             </span>
                         @else
                             <span class="regular-price" style="font-size:28px; font-weight:700; color:#2f241f;">
-                                ₹{{ number_format($data->price, 2) }}
+                                ₹ {{ number_format($data->price, 2) }}
                             </span>
                         @endif
                     </div>
@@ -123,10 +123,10 @@
                                 <div class="product-meta">
                                     <div class="price-block">
                                         @if($product->sale_price)
-                                            <span class="old-price">₹{{ $product->price }}</span>
-                                            <span class="sale-price">₹{{ $product->sale_price }}</span>
+                                            <span class="old-price">₹ {{ $product->price }}</span>
+                                            <span class="sale-price">₹ {{ $product->sale_price }}</span>
                                         @else
-                                            <span class="sale-price">₹{{ $product->price }}</span>
+                                            <span class="sale-price">₹ {{ $product->price }}</span>
                                         @endif
                                     </div>
                                 </div>
