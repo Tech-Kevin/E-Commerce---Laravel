@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -33,7 +35,26 @@ class HomeController extends Controller
         $products   = $query->latest()->get();
         $categories = Category::all();
 
-        return view('customer.home', compact('products', 'categories'));
+        // Best sellers: top 8 products by total quantity sold
+        $bestSellerIds = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_sold'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_sold')
+            ->limit(8)
+            ->pluck('total_sold', 'product_id');
+
+        $bestSellers = Product::whereIn('id', $bestSellerIds->keys())
+            ->get()
+            ->map(function ($product) use ($bestSellerIds) {
+                $product->total_sold = $bestSellerIds[$product->id] ?? 0;
+                return $product;
+            })
+            ->sortByDesc('total_sold')
+            ->values();
+
+        // New arrivals: 8 most recent products
+        $newArrivals = Product::latest()->limit(8)->get();
+
+        return view('customer.home', compact('products', 'categories', 'bestSellers', 'newArrivals'));
     }
     public function categoryProducts(Request $request, $slug)
     {

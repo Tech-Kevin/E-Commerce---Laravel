@@ -1578,6 +1578,326 @@ a {
 }
 
 /* =====================
+   Category Card Icons
+===================== */
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(40, 25, 10, 0.1);
+    border-color: #e49a67;
+}
+
+.category-icon {
+    font-size: 26px;
+    color: #dd7c3c;
+    width: 54px;
+    height: 54px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff1e6;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+    background: linear-gradient(135deg, #f29d62, #e67e4d);
+    color: #fff;
+    transform: scale(1.08);
+}
+
+/* =====================
+   Hero Stats
+===================== */
+.hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 28px;
+}
+
+.hero-stat {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+    color: #c26a2d;
+    font-size: 14px;
+}
+
+.stat-number {
+    font-size: 34px;
+    font-weight: 800;
+    color: #2f241f;
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #8a7769;
+    font-weight: 600;
+}
+
+/* =====================
+   Horizontal Scroll Row
+===================== */
+.scroll-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.scroll-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 0 18px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scroll-track::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-card {
+    min-width: 260px;
+    max-width: 260px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.scroll-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #eee4d8;
+    background: #ffffff;
+    color: #5c4d43;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(40, 25, 10, 0.08);
+    transition: all 0.25s ease;
+    z-index: 2;
+}
+
+.scroll-btn:hover {
+    background: linear-gradient(135deg, #f29d62, #e67e4d);
+    color: #fff;
+    border-color: transparent;
+    transform: scale(1.08);
+}
+
+/* =====================
+   Best Seller Badge
+===================== */
+.bestseller-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff6b35, #e64a19);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 3px 10px rgba(230, 74, 25, 0.3);
+}
+
+/* =====================
+   New Arrival Badge
+===================== */
+.newarrival-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 3px 10px rgba(46, 125, 50, 0.3);
+}
+
+/* =====================
+   Section Spacing
+===================== */
+.bestsellers-section,
+.newarrivals-section {
+    padding: 18px 0 28px;
+}
+
+/* =====================
+   Newsletter Section
+===================== */
+.newsletter-section {
+    padding: 28px 0;
+}
+
+.newsletter-card {
+    background: linear-gradient(135deg, #2f241f, #4a3628);
+    border-radius: 26px;
+    padding: 52px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.newsletter-card::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(242, 157, 98, 0.12);
+}
+
+.newsletter-card::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: -40px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(242, 157, 98, 0.08);
+}
+
+.newsletter-content {
+    position: relative;
+    z-index: 1;
+}
+
+.newsletter-icon {
+    font-size: 40px;
+    color: #f29d62;
+    margin-bottom: 16px;
+}
+
+.newsletter-card h2 {
+    font-size: 30px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.newsletter-card p {
+    color: #c4a98e;
+    font-size: 15px;
+    margin-bottom: 24px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.newsletter-form input {
+    flex: 1;
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0 18px;
+    font-size: 15px;
+    color: #ffffff;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.newsletter-form input::placeholder {
+    color: #a08a74;
+}
+
+.newsletter-form input:focus {
+    border-color: #f29d62;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.newsletter-form .primary-btn {
+    flex-shrink: 0;
+    min-height: 52px;
+}
+
+/* =====================
+   Scroll Reveal Animation
+===================== */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =====================
+   Responsive Overrides
+===================== */
+@media (max-width: 900px) {
+    .hero-stats {
+        gap: 20px;
+    }
+
+    .stat-number {
+        font-size: 26px;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+    }
+
+    .newsletter-card {
+        padding: 36px 24px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-stats {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .scroll-btn {
+        display: none;
+    }
+
+    .scroll-card {
+        min-width: 220px;
+        max-width: 220px;
+    }
+}
+
+/* =====================
    Toast Notification
 ===================== */
 #toast {

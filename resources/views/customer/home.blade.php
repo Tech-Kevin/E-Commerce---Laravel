@@ -3,7 +3,8 @@
 @section('title', 'Home')
 
 @section('content')
-    <section class="hero-section">
+    {{-- ========== HERO SECTION ========== --}}
+    <section class="hero-section reveal">
         <div class="store-container hero-grid">
             <div class="hero-content">
                 <span class="hero-badge">New Collection</span>
@@ -12,9 +13,24 @@
                     Discover trending products, best prices, and a smooth shopping experience designed for comfort.
                 </p>
 
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="stat-number" data-target="{{ $products->count() }}">0</span>
+                        <span class="stat-label">Products</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number" data-target="{{ $categories->count() }}">0</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="stat-number" data-target="{{ $bestSellers->sum('total_sold') }}">0</span>
+                        <span class="stat-label">Items Sold</span>
+                    </div>
+                </div>
+
                 <div class="hero-actions">
-                    <a href="#" class="primary-btn">Shop Now</a>
-                    <a href="#" class="secondary-btn">Explore Categories</a>
+                    <a href="#products-section" class="primary-btn">Shop Now</a>
+                    <a href="#category-section" class="secondary-btn">Explore Categories</a>
                 </div>
             </div>
 
@@ -22,13 +38,14 @@
                 <div class="hero-card-inner">
                     <h3>Special Offer</h3>
                     <p>Up to 40% off on selected products this week.</p>
-                    <a href="#" class="mini-btn">View Deals</a>
+                    <a href="#products-section" class="mini-btn">View Deals</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="category-section">
+    {{-- ========== CATEGORIES ========== --}}
+    <section class="category-section reveal" id="category-section">
         <div class="store-container">
             <div class="section-heading">
                 <div>
@@ -38,26 +55,32 @@
             </div>
 
             <div class="category-grid">
-                {{-- <div class="category-card">Electronics</div> --}}
                 @php
                     $activecategory = request()->query('category');
+                    $catIcons = ['fa-laptop', 'fa-shirt', 'fa-couch', 'fa-futbol', 'fa-book', 'fa-gem', 'fa-blender', 'fa-baby', 'fa-car', 'fa-pills'];
                 @endphp
-                @foreach($categories as $cat)
+                @foreach($categories as $index => $cat)
                     <a href="{{ route('home', ['category' => $cat->name]) }}"
                        class="category-card {{ $activecategory == $cat->name ? 'active' : '' }}">
-                        {{ $cat->name }}
+                        <i class="fa-solid {{ $catIcons[$index % count($catIcons)] }} category-icon"></i>
+                        <span>{{ $cat->name }}</span>
                     </a>
                 @endforeach
             </div>
         </div>
     </section>
 
-    <section class="products-section">
+    
+
+    
+
+    {{-- ========== ALL PRODUCTS ========== --}}
+    <section class="products-section reveal" id="products-section">
         <div class="store-container">
             <div class="section-heading">
                 <div>
-                    <h2>Featured Products</h2>
-                    <p>Top picks for you</p>
+                    <h2>All Products</h2>
+                    <p>Browse our full collection</p>
                 </div>
                 <a href="{{ route('home') }}" class="section-link">View All</a>
             </div>
@@ -86,7 +109,6 @@
                         </div>
 
                         <div class="product-card-body">
-                            {{-- <span class="product-category">{{ $product->category->name ?? 'General' }}</span> --}}
                             <h3>{{ $product->name }}</h3>
 
                             <div class="product-meta">
@@ -121,7 +143,117 @@
         </div>
     </section>
 
-    <section class="promo-strip">
+    {{-- ========== NEW ARRIVALS ========== --}}
+    @if($newArrivals->isNotEmpty())
+    <section class="newarrivals-section reveal">
+        <div class="store-container">
+            <div class="section-heading">
+                <div>
+                    <h2>{{-- <i class="fa-solid fa-sparkles" style="color: #e67e4d;"></i>  --}}New Arrivals</h2>
+                    <p>Fresh additions to our store</p>
+                </div>
+            </div>
+
+            <div class="scroll-row">
+                <button class="scroll-btn scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="scroll-track">
+                    @foreach ($newArrivals as $product)
+                        <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card scroll-card">
+                            <div class="newarrival-badge"><i class="fa-solid fa-bolt"></i> New</div>
+                            <div class="product-image-wrap">
+                                @if($product->getFirstMediaUrl('product_image'))
+                                    <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
+                                @else
+                                    <div class="product-placeholder">
+                                        <i class="fa-solid fa-box-open"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="product-card-body">
+                                <h3>{{ $product->name }}</h3>
+                                <div class="price-block">
+                                    @if($product->sale_price)
+                                        <span class="old-price">₹ {{ $product->price }}</span>
+                                        <span class="sale-price">₹ {{ $product->sale_price }}</span>
+                                    @else
+                                        <span class="regular-price">₹ {{ $product->price }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+                <button class="scroll-btn scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ========== BEST SELLERS ========== --}}
+    @if($bestSellers->isNotEmpty())
+    <section class="bestsellers-section reveal">
+        <div class="store-container">
+            <div class="section-heading">
+                <div>
+                    <h2>{{-- <i class="fa-solid fa-fire" style="color: #e67e4d;"></i> --}}</i>Best Sellers</h2>
+                    <p>Most loved products by our customers</p>
+                </div>
+            </div>
+
+            <div class="scroll-row">
+                <button class="scroll-btn scroll-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="scroll-track">
+                    @foreach ($bestSellers as $product)
+                        <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card scroll-card">
+                            <div class="bestseller-badge"><i class="fa-solid fa-fire-flame-curved"></i> {{ $product->total_sold }} sold</div>
+                            <div class="product-image-wrap">
+                                @if($product->getFirstMediaUrl('product_image'))
+                                    <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
+                                @else
+                                    <div class="product-placeholder">
+                                        <i class="fa-solid fa-box-open"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="product-card-body">
+                                <h3>{{ $product->name }}</h3>
+                                <div class="price-block">
+                                    @if($product->sale_price)
+                                        <span class="old-price">₹ {{ $product->price }}</span>
+                                        <span class="sale-price">₹ {{ $product->sale_price }}</span>
+                                    @else
+                                        <span class="regular-price">₹ {{ $product->price }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+                <button class="scroll-btn scroll-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ========== NEWSLETTER CTA ========== --}}
+    <section class="newsletter-section reveal">
+        <div class="store-container">
+            <div class="newsletter-card">
+                <div class="newsletter-content">
+                    <i class="fa-solid fa-envelope-open-text newsletter-icon"></i>
+                    <h2>Stay in the loop</h2>
+                    <p>Get notified about new arrivals, exclusive deals, and more.</p>
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Thanks for subscribing!', true);">
+                        <input type="email" placeholder="Enter your email address" required>
+                        <button type="submit" class="primary-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ========== PROMO STRIP ========== --}}
+    <section class="promo-strip reveal">
         <div class="store-container promo-grid">
             <div class="promo-box">
                 <i class="fa-solid fa-truck-fast"></i>
