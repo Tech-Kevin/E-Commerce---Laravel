@@ -32,7 +32,7 @@ class HomeController extends Controller
             });
         }
 
-        $products   = $query->latest()->get();
+        $products   = $query->with('activeSale')->latest()->get();
         $categories = Category::all();
 
         // Best sellers: top 8 products by total quantity sold
@@ -43,6 +43,7 @@ class HomeController extends Controller
             ->pluck('total_sold', 'product_id');
 
         $bestSellers = Product::whereIn('id', $bestSellerIds->keys())
+            ->with('activeSale')
             ->get()
             ->map(function ($product) use ($bestSellerIds) {
                 $product->total_sold = $bestSellerIds[$product->id] ?? 0;
@@ -52,7 +53,7 @@ class HomeController extends Controller
             ->values();
 
         // New arrivals: 8 most recent products
-        $newArrivals = Product::latest()->limit(8)->get();
+        $newArrivals = Product::with('activeSale')->latest()->limit(8)->get();
 
         return view('customer.home', compact('products', 'categories', 'bestSellers', 'newArrivals'));
     }
@@ -102,14 +103,15 @@ class HomeController extends Controller
             });
         }
 
-        $products = $query->get();
+        $products = $query->with('activeSale')->get();
 
         return view('customer.category-products', compact('category', 'categories', 'products'));
     }
 
      public function productDetails(Request $request){
-        $data = Product::findOrFail($request->id);
-        $suggestedProducts = Product::where('category_id', $data->category_id)
+        $data = Product::with('activeSale')->findOrFail($request->id);
+        $suggestedProducts = Product::with('activeSale')
+            ->where('category_id', $data->category_id)
             ->where('id', '!=', $data->id)
             ->inRandomOrder()
             ->limit(4)

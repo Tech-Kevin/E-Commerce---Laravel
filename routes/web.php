@@ -9,6 +9,7 @@ use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\delivery\DeliveryController;
 use App\Http\Controllers\vendor\ProductController;
+use App\Http\Controllers\vendor\SaleController;
 use App\Http\Controllers\vendor\VendorController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -83,6 +84,11 @@ Route::prefix('vendor')->middleware('vendor')->group(function () {
     Route::put('products/{id}/edit', [ProductController::class, 'update'])->name('vendor.product.update');
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('vendor.product.destroy');
     Route::get('subcategories/{categoryId}', [ProductController::class, 'getSubcategories'])->name('vendor.subcategories');
+
+    Route::get('sales', [SaleController::class, 'index'])->name('vendor.sales');
+    Route::post('sales/store', [SaleController::class, 'store'])->name('vendor.sales.store');
+    Route::put('sales/{id}', [SaleController::class, 'update'])->name('vendor.sales.update');
+    Route::delete('sales/{id}', [SaleController::class, 'destroy'])->name('vendor.sales.destroy');
 
     Route::get('orders', [VendorController::class, 'ShowOrders'])->name('vendor.orders');
     Route::patch('orders/{order}/status', [VendorController::class, 'updateOrderStatus'])->name('vendor.order.status');

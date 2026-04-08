@@ -58,4 +58,25 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo(Subcategory::class);
     }
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    public function activeSale()
+    {
+        return $this->hasOne(Sale::class)
+            ->where('status', 'active')
+            ->where('start_date', '<=', now())
+            ->where('end_date', '>=', now());
+    }
+
+    public function getSalePriceAttribute($value)
+    {
+        if ($this->relationLoaded('activeSale') && $this->activeSale) {
+            return $this->activeSale->sale_price;
+        }
+        return $value;
+    }
 }

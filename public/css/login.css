@@ -136,10 +136,49 @@ body {
     background-color: #ffffff;
 }
 
+.form-control-error {
+    border-color: #d9534f;
+    background-color: #fef8f8;
+}
+
+.form-control-error:focus {
+    border-color: #d9534f;
+    box-shadow: 0 0 0 4px rgba(217, 83, 79, 0.15);
+}
+
 .text-danger {
     margin-top: 7px;
     font-size: 13px;
     color: #d9534f;
+}
+
+.alert-error {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.auth-register-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #6d5c53;
+}
+
+.auth-register-link a {
+    color: #e67e4d;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.auth-register-link a:hover {
+    color: #c26a2d;
+    text-decoration: underline;
 }
 
 .auth-btn {

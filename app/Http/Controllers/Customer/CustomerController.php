@@ -34,7 +34,7 @@ class CustomerController extends Controller
 
     public function ShowWishlist()
     {
-        $wishlistItems = Auth::user()->wishlist()->with('product')->get();
+        $wishlistItems = Auth::user()->wishlist()->with('product.activeSale')->get();
         return view('customer.wishlist', compact('wishlistItems'));
     }
 }

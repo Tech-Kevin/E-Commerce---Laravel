@@ -15,7 +15,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['category', 'subcategory'])->latest()->get();
+        $products = Product::with(['category', 'subcategory', 'activeSale'])->latest()->get();
         $categories = Category::where('status', true)->with('subcategories')->get();
         return view('vendor.product.create', compact('products', 'categories'));
     }
@@ -56,7 +56,7 @@ class ProductController extends Controller
 
     public function show()
     {
-        $products = Product::with(['category', 'subcategory'])->latest()->get();
+        $products = Product::with(['category', 'subcategory', 'activeSale'])->latest()->get();
         $categories = Category::where('status', true)->with('subcategories')->get();
         return view('vendor.product.index', compact('products', 'categories'));
     }

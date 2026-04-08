@@ -18,6 +18,11 @@
             <span>Products</span>
         </a>
 
+        <a href="{{ route('vendor.sales') }}" class="vendor-nav-item {{ request()->routeIs('vendor.sales') ? 'active' : '' }}">
+            <i class="fa-solid fa-tags"></i>
+            <span>Sales</span>
+        </a>
+
         <a href="{{ route('vendor.orders') }}" class="vendor-nav-item {{ request()->routeIs('vendor.orders') ? 'active' : '' }}">
             <i class="fa-solid fa-bag-shopping"></i>
             <span>Orders</span>

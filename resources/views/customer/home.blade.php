@@ -159,7 +159,7 @@
                 <div class="scroll-track">
                     @foreach ($newArrivals as $product)
                         <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card scroll-card">
-                            <div class="newarrival-badge"><i class="fa-solid fa-bolt"></i> New</div>
+                            {{-- <div class="newarrival-badge"><i class="fa-solid fa-bolt"></i> New</div> --}}
                             <div class="product-image-wrap">
                                 @if($product->getFirstMediaUrl('product_image'))
                                     <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
@@ -205,7 +205,7 @@
                 <div class="scroll-track">
                     @foreach ($bestSellers as $product)
                         <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card scroll-card">
-                            <div class="bestseller-badge"><i class="fa-solid fa-fire-flame-curved"></i> {{ $product->total_sold }} sold</div>
+                            {{-- <div class="bestseller-badge"><i class="fa-solid fa-fire-flame-curved"></i> {{ $product->total_sold }} sold</div> --}}
                             <div class="product-image-wrap">
                                 @if($product->getFirstMediaUrl('product_image'))
                                     <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">

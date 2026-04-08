@@ -90,8 +90,10 @@
                                 <td>₹ {{ $product->price }}</td>
 
                                 <td>
-                                    @if($product->sale_price)
-                                        <span class="sale-price">₹ {{ $product->sale_price }}</span>
+                                    @if($product->activeSale)
+                                        <span class="sale-price">₹ {{ $product->activeSale->sale_price }}</span>
+                                    @elseif($product->sales()->where('status', 'scheduled')->exists())
+                                        <span class="stock-badge" style="background: #fff3cd; color: #856404; font-size: 11px;">Scheduled</span>
                                     @else
                                         <span class="no-sale">—</span>
                                     @endif
@@ -215,15 +217,6 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
-                            <label for="sale_price" class="form-label">Sale Price</label>
-                            <input type="number" class="form-control" id="sale_price" name="sale_price"
-                                value="{{ old('sale_price') }}">
-                            @error('sale_price')
-                                <div class="form-error">{{ $message }}</div>
-                            @enderror
-                        </div>
-
                         <div class="form-group full-width">
                             <label for="image" class="form-label">Product Image</label>
 
@@ -331,10 +324,6 @@
                             <input type="number" class="form-control" id="edit_price" name="price">
                         </div>
 
-                        <div class="form-group">
-                            <label for="edit_sale_price" class="form-label">Sale Price</label>
-                            <input type="number" class="form-control" id="edit_sale_price" name="sale_price">
-                        </div>
                     </div>
                     <div class="form-group full-width">
                         

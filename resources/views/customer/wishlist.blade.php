@@ -43,13 +43,13 @@
                         @endif
                     </div>
                     <div class="product-card-body">
-                        <span class="product-category">{{ $product->category->name ?? '' }}</span>
+                        {{-- <span class="product-category">{{ $product->category->name ?? '' }}</span> --}}
                         <h3>{{ $product->name }}</h3>
                         <p>{{ $product->description }}</p>
                         <div class="product-meta">
                             @if($product->sale_price)
                                 <span class="sale-price">₹ {{ number_format($product->sale_price, 2) }}</span>
-                                <span class="regular-price strike">₹{{ number_format($product->price, 2) }}</span>
+                                <span class="old-price">₹{{ number_format($product->price, 2) }}</span>
                             @else
                                 <span class="regular-price">₹ {{ number_format($product->price, 2) }}</span>
                             @endif
