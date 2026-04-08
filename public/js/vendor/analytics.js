@@ -34,7 +34,7 @@ const revenueChart = new Chart(document.getElementById('revenueChart'), {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         datasets: [{
             label: 'Revenue',
-            data: [12000, 18000, 15000, 22000, 26000, 24000, 30000, 34000, 32000, 38000, 42000, 46000],
+            data: analyticsData.revenueData,
             borderColor: '#e67e4d',
             backgroundColor: 'rgba(230, 126, 77, 0.12)',
             fill: true,
@@ -48,13 +48,15 @@ const revenueChart = new Chart(document.getElementById('revenueChart'), {
     options: chartCommonOptions
 });
 
-const trafficChart = new Chart(document.getElementById('trafficChart'), {
+const statusColors = ['#f29d62', '#e67e4d', '#f3c49e', '#f7dcc5', '#d4a574', '#c98b5a', '#b87340'];
+
+const statusChart = new Chart(document.getElementById('statusChart'), {
     type: 'doughnut',
     data: {
-        labels: ['Direct', 'Social', 'Search', 'Ads'],
+        labels: analyticsData.statusLabels,
         datasets: [{
-            data: [38, 24, 21, 17],
-            backgroundColor: ['#f29d62', '#e67e4d', '#f3c49e', '#f7dcc5'],
+            data: analyticsData.statusData,
+            backgroundColor: statusColors.slice(0, analyticsData.statusLabels.length),
             borderWidth: 0
         }]
     },
@@ -78,17 +80,17 @@ const trafficChart = new Chart(document.getElementById('trafficChart'), {
 const ordersCustomersChart = new Chart(document.getElementById('ordersCustomersChart'), {
     type: 'bar',
     data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        labels: analyticsData.dailyLabels,
         datasets: [
             {
                 label: 'Orders',
-                data: [32, 45, 38, 52, 60, 48, 55],
+                data: analyticsData.dailyOrders,
                 backgroundColor: '#f29d62',
                 borderRadius: 8
             },
             {
-                label: 'Customers',
-                data: [20, 30, 24, 35, 42, 33, 39],
+                label: 'New Customers',
+                data: analyticsData.dailyCustomers,
                 backgroundColor: '#f7dcc5',
                 borderRadius: 8
             }

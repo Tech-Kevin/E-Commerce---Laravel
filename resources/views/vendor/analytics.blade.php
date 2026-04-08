@@ -12,8 +12,8 @@
             </div>
             <div class="stats-card-info">
                 <h3>Total Revenue</h3>
-                <h2>₹ 1,48,500</h2>
-                <p>+18.4% this month</p>
+                <h2>₹ {{ number_format($totalRevenue, 2) }}</h2>
+                <p>{{ $revenueGrowth >= 0 ? '+' : '' }}{{ $revenueGrowth }}% this month</p>
             </div>
         </div>
 
@@ -23,8 +23,8 @@
             </div>
             <div class="stats-card-info">
                 <h3>Total Orders</h3>
-                <h2>1,286</h2>
-                <p>+9.2% this week</p>
+                <h2>{{ number_format($totalOrders) }}</h2>
+                <p>{{ $ordersGrowth >= 0 ? '+' : '' }}{{ $ordersGrowth }}% this week</p>
             </div>
         </div>
 
@@ -34,19 +34,19 @@
             </div>
             <div class="stats-card-info">
                 <h3>New Customers</h3>
-                <h2>324</h2>
-                <p>+12.8% growth</p>
+                <h2>{{ number_format($newCustomersThisMonth) }}</h2>
+                <p>{{ $customerGrowth >= 0 ? '+' : '' }}{{ $customerGrowth }}% growth</p>
             </div>
         </div>
 
         <div class="stats-card analytics-stat-card">
             <div class="stats-card-icon products">
-                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-indian-rupee-sign"></i>
             </div>
             <div class="stats-card-info">
-                <h3>Conversion Rate</h3>
-                <h2>4.9%</h2>
-                <p>Strong performance</p>
+                <h3>Avg. Order Value</h3>
+                <h2>₹ {{ number_format($avgOrderValue, 2) }}</h2>
+                <p>Per order average</p>
             </div>
         </div>
     </section>
@@ -58,12 +58,6 @@
                     <h3>Revenue Overview</h3>
                     <p class="card-subtext">Monthly sales performance across the year</p>
                 </div>
-
-                <div class="analytics-filter-pills">
-                    <button type="button" class="analytics-pill active">Yearly</button>
-                    <button type="button" class="analytics-pill">Monthly</button>
-                    <button type="button" class="analytics-pill">Weekly</button>
-                </div>
             </div>
 
             <div class="chart-box">
@@ -74,36 +68,28 @@
         <div class="dashboard-card analytics-chart-card side-chart-card">
             <div class="card-header analytics-card-header">
                 <div>
-                    <h3>Traffic Sources</h3>
-                    <p class="card-subtext">Where your buyers are coming from</p>
+                    <h3>Order Status</h3>
+                    <p class="card-subtext">Distribution of order statuses</p>
                 </div>
             </div>
 
             <div class="chart-box doughnut-chart-box">
-                <canvas id="trafficChart"></canvas>
+                <canvas id="statusChart"></canvas>
             </div>
 
             <div class="traffic-legend">
-                <div class="legend-item">
-                    <span class="legend-dot dot-one"></span>
-                    <span>Direct</span>
-                    <strong>38%</strong>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-dot dot-two"></span>
-                    <span>Social</span>
-                    <strong>24%</strong>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-dot dot-three"></span>
-                    <span>Search</span>
-                    <strong>21%</strong>
-                </div>
-                <div class="legend-item">
-                    <span class="legend-dot dot-four"></span>
-                    <span>Ads</span>
-                    <strong>17%</strong>
-                </div>
+                @php
+                    $statusLabels = array_keys($statusCounts);
+                    $dotClasses = ['dot-one', 'dot-two', 'dot-three', 'dot-four', 'dot-one'];
+                    $totalStatusOrders = array_sum($statusCounts) ?: 1;
+                @endphp
+                @foreach($statusCounts as $status => $count)
+                    <div class="legend-item">
+                        <span class="legend-dot {{ $dotClasses[$loop->index % count($dotClasses)] }}"></span>
+                        <span>{{ ucfirst($status) }}</span>
+                        <strong>{{ round(($count / $totalStatusOrders) * 100) }}%</strong>
+                    </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -113,7 +99,7 @@
             <div class="card-header analytics-card-header">
                 <div>
                     <h3>Orders vs Customers</h3>
-                    <p class="card-subtext">Weekly acquisition and order trend</p>
+                    <p class="card-subtext">Last 7 days acquisition and order trend</p>
                 </div>
             </div>
 
@@ -131,41 +117,17 @@
             </div>
 
             <div class="analytics-product-list">
-                <div class="analytics-product-item">
-                    <div class="analytics-product-rank">1</div>
-                    <div class="analytics-product-info">
-                        <h4>Wireless Headphones</h4>
-                        <p>320 sales • ₹48,000 revenue</p>
+                @forelse($topProducts as $product)
+                    <div class="analytics-product-item">
+                        <div class="analytics-product-rank">{{ $loop->iteration }}</div>
+                        <div class="analytics-product-info">
+                            <h4>{{ $product->product_name }}</h4>
+                            <p>{{ $product->total_sold }} sales &bull; ₹ {{ number_format($product->total_revenue, 2) }} revenue</p>
+                        </div>
                     </div>
-                    <span class="analytics-product-growth">+18%</span>
-                </div>
-
-                <div class="analytics-product-item">
-                    <div class="analytics-product-rank">2</div>
-                    <div class="analytics-product-info">
-                        <h4>Smart Watch</h4>
-                        <p>280 sales • ₹ 39,500 revenue</p>
-                    </div>
-                    <span class="analytics-product-growth">+14%</span>
-                </div>
-
-                <div class="analytics-product-item">
-                    <div class="analytics-product-rank">3</div>
-                    <div class="analytics-product-info">
-                        <h4>Bluetooth Speaker</h4>
-                        <p>210 sales • ₹ 29,800 revenue</p>
-                    </div>
-                    <span class="analytics-product-growth">+11%</span>
-                </div>
-
-                <div class="analytics-product-item">
-                    <div class="analytics-product-rank">4</div>
-                    <div class="analytics-product-info">
-                        <h4>Phone Cover</h4>
-                        <p>180 sales • ₹ 16,200 revenue</p>
-                    </div>
-                    <span class="analytics-product-growth">+9%</span>
-                </div>
+                @empty
+                    <p style="padding: 1rem; color: #8a7769;">No product sales this month yet.</p>
+                @endforelse
             </div>
         </div>
     </section>
@@ -175,95 +137,83 @@
             <div class="card-header analytics-card-header">
                 <div>
                     <h3>Recent Activity</h3>
-                    <p class="card-subtext">Latest store insights and events</p>
+                    <p class="card-subtext">Latest orders and events</p>
                 </div>
             </div>
 
             <div class="activity-timeline">
-                <div class="activity-item">
-                    <div class="activity-dot"></div>
-                    <div class="activity-content">
-                        <h4>New order spike detected</h4>
-                        <p>Orders increased by 24% in the last 24 hours.</p>
-                        <span>10 minutes ago</span>
+                @forelse($recentOrders as $order)
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div class="activity-content">
+                            <h4>Order #{{ $order->order_number }} — {{ ucfirst($order->status) }}</h4>
+                            <p>{{ $order->user->name ?? 'Guest' }} placed an order of ₹ {{ number_format($order->grand_total, 2) }}</p>
+                            <span>{{ $order->created_at->diffForHumans() }}</span>
+                        </div>
                     </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-dot"></div>
-                    <div class="activity-content">
-                        <h4>Best-selling product updated</h4>
-                        <p>Wireless Headphones moved to #1 this week.</p>
-                        <span>1 hour ago</span>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-dot"></div>
-                    <div class="activity-content">
-                        <h4>Returning customer rate improved</h4>
-                        <p>Repeat purchases are up by 8.5% this month.</p>
-                        <span>3 hours ago</span>
-                    </div>
-                </div>
-
-                <div class="activity-item">
-                    <div class="activity-dot"></div>
-                    <div class="activity-content">
-                        <h4>Campaign traffic increased</h4>
-                        <p>Social media campaign brought 1.2K new visitors.</p>
-                        <span>Yesterday</span>
-                    </div>
-                </div>
+                @empty
+                    <p style="padding: 1rem; color: #8a7769;">No recent orders.</p>
+                @endforelse
             </div>
         </div>
 
         <div class="dashboard-card analytics-goal-card">
             <div class="card-header analytics-card-header">
                 <div>
-                    <h3>Goals Progress</h3>
-                    <p class="card-subtext">Track your monthly store targets</p>
+                    <h3>Monthly Summary</h3>
+                    <p class="card-subtext">This month's performance snapshot</p>
                 </div>
             </div>
 
             <div class="goal-progress-list">
+                @php
+                    $ordersThisMonth = \App\Models\Order::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+                    $deliveredThisMonth = \App\Models\Order::where('status', 'delivered')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+                    $cancelledThisMonth = \App\Models\Order::where('status', 'cancelled')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+                    $paidThisMonth = \App\Models\Order::where('payment_status', 'paid')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count();
+
+                    $deliveredPct = $ordersThisMonth > 0 ? round(($deliveredThisMonth / $ordersThisMonth) * 100) : 0;
+                    $cancelledPct = $ordersThisMonth > 0 ? round(($cancelledThisMonth / $ordersThisMonth) * 100) : 0;
+                    $paidPct = $ordersThisMonth > 0 ? round(($paidThisMonth / $ordersThisMonth) * 100) : 0;
+                @endphp
+
                 <div class="goal-item">
                     <div class="goal-header">
-                        <span>Revenue Goal</span>
-                        <strong>78%</strong>
+                        <span>Revenue This Month</span>
+                        <strong>₹ {{ number_format($revenueThisMonth ?? 0, 2) }}</strong>
                     </div>
                     <div class="goal-track">
-                        <div class="goal-fill fill-revenue"></div>
+                        <div class="goal-fill fill-revenue" style="width: {{ min($totalRevenue > 0 ? round(($revenueThisMonth / $totalRevenue) * 100) : 0, 100) }}%"></div>
                     </div>
                 </div>
 
                 <div class="goal-item">
                     <div class="goal-header">
-                        <span>Order Goal</span>
-                        <strong>64%</strong>
+                        <span>Delivered Orders</span>
+                        <strong>{{ $deliveredPct }}%</strong>
                     </div>
                     <div class="goal-track">
-                        <div class="goal-fill fill-orders"></div>
+                        <div class="goal-fill fill-orders" style="width: {{ $deliveredPct }}%"></div>
                     </div>
                 </div>
 
                 <div class="goal-item">
                     <div class="goal-header">
-                        <span>Customer Goal</span>
-                        <strong>81%</strong>
+                        <span>Payment Collected</span>
+                        <strong>{{ $paidPct }}%</strong>
                     </div>
                     <div class="goal-track">
-                        <div class="goal-fill fill-customers"></div>
+                        <div class="goal-fill fill-customers" style="width: {{ $paidPct }}%"></div>
                     </div>
                 </div>
 
                 <div class="goal-item">
                     <div class="goal-header">
-                        <span>Retention Goal</span>
-                        <strong>57%</strong>
+                        <span>Cancellation Rate</span>
+                        <strong>{{ $cancelledPct }}%</strong>
                     </div>
                     <div class="goal-track">
-                        <div class="goal-fill fill-retention"></div>
+                        <div class="goal-fill fill-retention" style="width: {{ $cancelledPct }}%"></div>
                     </div>
                 </div>
             </div>
@@ -272,6 +222,16 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const analyticsData = {
+            revenueData: @json($revenueData),
+            statusLabels: @json(array_map('ucfirst', array_keys($statusCounts))),
+            statusData: @json(array_values($statusCounts)),
+            dailyLabels: @json($dailyLabels),
+            dailyOrders: @json($dailyOrders),
+            dailyCustomers: @json($dailyCustomers),
+        };
+    </script>
     <script src="{{ asset('js/vendor/analytics.js') }}"></script>
 @endpush
 @endsection
