@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Delivery Panel')</title>
-    <link rel="stylesheet" href="{{ asset('css/delivery.css') }}">
+    <title>@yield('title', __('delivery.panel_title'))</title>
+    <link rel="stylesheet" href="{{ asset('css/delivery.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     <div class="vendor-layout">
         @include('delivery.partials.sidebar')
 
@@ -26,9 +27,14 @@
                 </div>
             @endif
             <header class="vendor-header">
-                <div class="vendor-header-left">
-                    <h1>@yield('page_title', 'Dashboard')</h1>
-                    <p>@yield('page_subtitle', 'Welcome to your delivery dashboard')</p>
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="vendor-header-left">
+                        <h1>@yield('page_title', __('delivery.dashboard'))</h1>
+                        <p>@yield('page_subtitle', __('delivery.track_deliveries'))</p>
+                    </div>
                 </div>
 
                 @php use Illuminate\Support\Facades\Auth; @endphp
@@ -37,7 +43,7 @@
                         <div class="vendor-avatar">{{ strtoupper(substr(Auth::user()->name ?? 'D', 0, 1)) }}</div>
                         <div>
                             <h4>{{ Auth::user()->name ?? 'Delivery' }}</h4>
-                            <span>Delivery Partner</span>
+                            <span>{{ __('delivery.delivery_partner') }}</span>
                         </div>
                     </div>
                 </div>
@@ -53,6 +59,12 @@
         // Auto-hide flash messages
         const flash = document.getElementById('flash-message');
         if (flash) setTimeout(() => flash.style.display = 'none', 3000);
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.querySelector('.vendor-sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('open');
+        }
     </script>
 </body>
 

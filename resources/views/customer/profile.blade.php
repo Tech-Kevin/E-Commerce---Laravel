@@ -1,14 +1,14 @@
 @extends('layouts.store')
 
-@section('title', 'My Account')
+@section('title', __('store.my_account'))
 
 @section('content')
     <section class="page-section">
         <div class="store-container">
             <div class="section-heading">
                 <div>
-                    <h2>My Account</h2>
-                    <p>Manage your profile and saved information</p>
+                    <h2>{{ __('store.my_account') }}</h2>
+                    <p>{{ __('store.manage_profile') }}</p>
                 </div>
             </div>
 
@@ -41,28 +41,28 @@
 
                     <div class="checkout-grid">
                         <div class="form-group">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">{{ __('store.name') }}</label>
                             <input type="text" name="name" class="form-control" value="{{ old('name', Auth::user()->name) }}">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Email</label>
+                            <label class="form-label">{{ __('store.email') }}</label>
                             <input type="email" name="email" class="form-control" value="{{ old('email', Auth::user()->email) }}">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Phone</label>
+                            <label class="form-label">{{ __('store.phone') }}</label>
                             <input type="text" name="number" class="form-control" value="{{ old('number', Auth::user()->number) }}">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Address</label>
+                            <label class="form-label">{{ __('store.address') }}</label>
                             <input type="text" name="address" class="form-control" value="{{ old('address', Auth::user()->address) }}">
                         </div>
                     </div>
 
                     <div class="profile-actions">
-                        <button type="submit" class="primary-btn">Save Changes</button>
+                        <button type="submit" class="primary-btn">{{ __('store.save_changes') }}</button>
                     </div>
                 </form>
             </div>

@@ -10,7 +10,7 @@
 
             <div style="margin-bottom:16px;">
                 <a href="{{ route('home') }}" style="color:#b28868; font-size:14px;">
-                    <i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>Back to Products
+                    <i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>{{ __('store.back_to_products') }}
                 </a>
             </div>
 
@@ -53,11 +53,11 @@
 
                     @if($data->stock > 0)
                         <span class="stock-badge in-stock" style="margin-bottom:16px; display:inline-block;">
-                            In Stock ({{ $data->stock }} left)
+                            {{ __('store.in_stock_left', ['count' => $data->stock]) }}
                         </span>
                     @else
                         <span class="stock-badge out-stock" style="margin-bottom:16px; display:inline-block;">
-                            Out of Stock
+                            {{ __('store.out_of_stock') }}
                         </span>
                     @endif
 
@@ -65,37 +65,37 @@
                         <button type="button" class="primary-btn add-to-cart-btn"
                             data-id="{{ $data->id }}"
                             {{ $data->stock == 0 ? 'disabled' : '' }}>
-                            <i class="fa-solid fa-cart-plus" style="margin-right:6px;"></i>Add to Cart
+                            <i class="fa-solid fa-cart-plus" style="margin-right:6px;"></i>{{ __('store.add_to_cart') }}
                         </button>
 
                         @auth
                         <button type="button" class="secondary-btn wishlist-toggle-btn"
                             data-id="{{ $data->id }}"
                             id="wishlist-btn-{{ $data->id }}">
-                            <i class="fa-regular fa-heart" style="margin-right:6px;"></i>Add to Wishlist
+                            <i class="fa-regular fa-heart" style="margin-right:6px;"></i>{{ __('store.add_to_wishlist') }}
                         </button>
                         @endauth
                     </div>
 
                     <div class="details-info-list" style="margin-top:20px;">
                         @if($data->sku)
-                            <div><strong>SKU:</strong> {{ $data->sku }}</div>
+                            <div><strong>{{ __('store.sku') }}:</strong> {{ $data->sku }}</div>
                         @endif
                         @if($data->category)
-                            <div><strong>Category:</strong> {{ $data->category->name }}</div>
+                            <div><strong>{{ __('store.category') }}:</strong> {{ $data->category->name }}</div>
                         @endif
                         @if($data->subcategory)
-                            <div><strong>Subcategory:</strong> {{ $data->subcategory->name }}</div>
+                            <div><strong>{{ __('store.subcategory') }}:</strong> {{ $data->subcategory->name }}</div>
                         @endif
                         @if($data->brand)
-                            <div><strong>Brand:</strong> {{ $data->brand }}</div>
+                            <div><strong>{{ __('store.brand') }}:</strong> {{ $data->brand }}</div>
                         @endif
-                        <div><strong>Stock:</strong> {{ $data->stock }}</div>
+                        <div><strong>{{ __('store.stock') }}:</strong> {{ $data->stock }}</div>
                     </div>
 
                     @if($data->full_description)
                     <div style="margin-top:24px; padding-top:20px; border-top:1px solid #f2e7dc;">
-                        <h3 style="margin-bottom:10px; font-size:16px;">Product Description</h3>
+                        <h3 style="margin-bottom:10px; font-size:16px;">{{ __('store.product_description') }}</h3>
                         <p style="color:#6d5c53; line-height:1.7; font-size:14px;">{{ $data->full_description }}</p>
                     </div>
                     @endif
@@ -103,7 +103,7 @@
             </div>
             @if($suggestedProducts->isNotEmpty())
             <div class="suggested-section">
-                <h2>You May Also Like</h2>
+                <h2>{{ __('store.you_may_also_like') }}</h2>
                 <div class="products-grid">
                     @foreach($suggestedProducts as $product)
                         <div class="product-card">
@@ -117,9 +117,7 @@
                                 @endif
                             </div>
                             <div class="product-card-body">
-                                {{-- <span class="product-category">{{ $product->category->name ?? 'General' }}</span> --}}
                                 <h3>{{ $product->name }}</h3>
-                                {{-- <p>{{ $product->description }}</p> --}}
                                 <div class="product-meta">
                                     <div class="price-block">
                                         @if($product->sale_price)
@@ -132,7 +130,7 @@
                                 </div>
                                 <div class="product-actions">
                                     <a href="{{ route('product.details', $product->id) }}" class="product-btn" style="text-decoration:none;">
-                                        View Details
+                                        {{ __('store.view_details') }}
                                     </a>
                                     @auth
                                     <button class="wishlist-btn wishlist-toggle-btn" data-id="{{ $product->id }}" id="wl-{{ $product->id }}">

@@ -40,6 +40,7 @@ class ProductController extends Controller
         $product->category_id = $data['category_id'];
         $product->subcategory_id = $data['subcategory_id'];
         $product->brand = $data['brand'] ?? null;
+        $product->shipping_charge = $data['shipping_charge'] ?? 0;
         $saved = $product->save();
 
         if ($saved && $req->hasFile('image')) {
@@ -83,8 +84,7 @@ class ProductController extends Controller
         $product->category_id = $data['category_id'];
         $product->subcategory_id = $data['subcategory_id'];
         $product->brand = $data['brand'] ?? null;
-
-
+        $product->shipping_charge = $data['shipping_charge'] ?? 0;
 
         if ($product->save()) {
 

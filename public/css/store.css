@@ -121,6 +121,72 @@ a {
     gap: 12px;
 }
 
+/* Language Flag Dropdown */
+.lang-flag-dropdown {
+    position: relative;
+}
+
+.lang-flag-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid #f2e7dc;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.lang-flag-btn:hover {
+    border-color: #d9c4b0;
+    background: #fdf8f4;
+}
+
+.flag-img {
+    width: 24px;
+    height: 16px;
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+.lang-flag-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: #fff;
+    border: 1px solid #f2e7dc;
+    border-radius: 10px;
+    min-width: 130px;
+    z-index: 200;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.lang-flag-dropdown.open .lang-flag-menu {
+    display: block;
+}
+
+.lang-flag-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2f241f;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.lang-flag-option:hover {
+    background: #fdf8f4;
+}
+
 .header-icon-btn {
     min-height: 44px;
     padding: 0 14px;

@@ -1,14 +1,14 @@
 @extends('layouts.store')
 
-@section('title', 'My Orders')
+@section('title', __('store.my_orders'))
 
 @section('content')
     <section class="page-section">
         <div class="store-container">
             <div class="section-heading">
                 <div>
-                    <h2>My Orders</h2>
-                    <p>Track all your orders here</p>
+                    <h2>{{ __('store.my_orders') }}</h2>
+                    <p>{{ __('store.track_orders') }}</p>
                 </div>
             </div>
 
@@ -21,19 +21,19 @@
             @if($orders->isEmpty())
                 <div class="empty-state">
                     <i class="fa-solid fa-box-open"></i>
-                    <h3>No orders yet</h3>
-                    <a href="{{ route('home') }}" class="primary-btn">Start Shopping</a>
+                    <h3>{{ __('store.no_orders') }}</h3>
+                    <a href="{{ route('home') }}" class="primary-btn">{{ __('store.start_shopping') }}</a>
                 </div>
             @else
             <div class="table-card">
                 <table class="store-table">
                     <thead>
                         <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Items</th>
-                            <th>Status</th>
-                            <th>Total</th>
+                            <th>{{ __('store.order_id') }}</th>
+                            <th>{{ __('store.date') }}</th>
+                            <th>{{ __('store.items') }}</th>
+                            <th>{{ __('store.status') }}</th>
+                            <th>{{ __('store.total') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +41,7 @@
                         <tr>
                             <td>#{{ $order->order_number }}</td>
                             <td>{{ $order->created_at->format('d M Y') }}</td>
-                            <td>{{ $order->items->count() }} item(s)</td>
+                            <td>{{ __('store.item_count', ['count' => $order->items->count()]) }}</td>
                             <td>
                                 <span class="stock-badge {{ $order->status === 'delivered' ? 'in-stock' : ($order->status === 'cancelled' ? 'out-stock' : 'low-stock') }}">
                                     {{ ucfirst($order->status) }}

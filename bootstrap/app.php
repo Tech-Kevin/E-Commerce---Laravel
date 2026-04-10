@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\CustomerMiddleware;
 use App\Http\Middleware\DeliveryMiddleware;
+use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\VendorMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -22,9 +23,10 @@ return Application::configure(basePath: dirname(__DIR__))
             return route('home');
         });
         $middleware->alias([
-            'customer' => CustomerMiddleware::class,
-            'vendor'   => VendorMiddleware::class,
-            'delivery' => DeliveryMiddleware::class,
+            'customer'   => CustomerMiddleware::class,
+            'vendor'     => VendorMiddleware::class,
+            'delivery'   => DeliveryMiddleware::class,
+            'set-locale' => SetLocale::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

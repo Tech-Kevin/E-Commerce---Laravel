@@ -34,6 +34,7 @@ class UpdateReq extends FormRequest
             'subcategory_id' => 'nullable|exists:subcategories,id',
             'brand' => 'nullable|string|max:255',
             'image' => 'nullable|mimes:jpg,jpeg,png,webp|max:2048',
+            'shipping_charge' => 'nullable|numeric|min:0',
         ];
     }
 }

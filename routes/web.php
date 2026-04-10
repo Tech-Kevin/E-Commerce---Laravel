@@ -22,6 +22,16 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [loginController::class, 'login'])->name('login');
 });
 
+// Language switch — works for all users (guest + logged-in)
+Route::post('language/switch', function (Request $request) {
+    $request->validate(['locale' => 'required|in:en,hi']);
+    session(['locale' => $request->locale]);
+    if (Auth::check()) {
+        Auth::user()->update(['locale' => $request->locale]);
+    }
+    return redirect()->back();
+})->name('language.switch');
+
 Route::post('logout', function () {
     Auth::logout();
     request()->session()->invalidate();
@@ -30,7 +40,7 @@ Route::post('logout', function () {
 })->name('logout');
 
 // Customer routes — public (no login required)
-Route::prefix('customer')->group(function () {
+Route::prefix('customer')->middleware('set-locale')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('product-details/{id}', [HomeController::class, 'productDetails'])->name('product.details');
     Route::get('category/{slug}', [HomeController::class, 'categoryProducts'])->name('category.products');
@@ -43,7 +53,7 @@ Route::prefix('customer')->group(function () {
 });
 
 // Customer routes — login required
-Route::prefix('customer')->middleware('customer')->group(function () {
+Route::prefix('customer')->middleware(['customer', 'set-locale'])->group(function () {
     // Checkout & Orders
     Route::get('/checkout', [HomeController::class, 'ShowCheckout'])->name('customer.checkout');
     Route::post('/checkout/place', [OrderController::class, 'placeOrder'])->name('order.place');
@@ -62,7 +72,7 @@ Route::prefix('customer')->middleware('customer')->group(function () {
 });
 
 // Delivery routes — login required
-Route::prefix('delivery')->middleware('delivery')->group(function () {
+Route::prefix('delivery')->middleware(['delivery', 'set-locale'])->group(function () {
     Route::get('home', [DeliveryController::class, 'index'])->name('delivery.dashboard');
     Route::get('orders', [DeliveryController::class, 'assignedOrders'])->name('delivery.orders');
     Route::get('completed', [DeliveryController::class, 'completedOrders'])->name('delivery.completed');
@@ -73,6 +83,7 @@ Route::prefix('delivery')->middleware('delivery')->group(function () {
     Route::post('orders/{order}/confirm', [DeliveryController::class, 'confirmDelivery'])->name('delivery.confirm');
     Route::get('settings', [DeliveryController::class, 'settings'])->name('delivery.settings');
     Route::put('settings/update', [DeliveryController::class, 'updateSettings'])->name('delivery.settings.update');
+    Route::post('language', [DeliveryController::class, 'switchLanguage'])->name('delivery.language');
 });
 
 // Vendor routes — login required

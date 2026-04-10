@@ -46,6 +46,7 @@
                                         data-category="{{ $product->category }}" data-brand="{{ $product->brand }}"
                                         data-stock="{{ $product->stock }}" data-price="{{ $product->price }}"
                                         data-sale_price="{{ $product->sale_price }}"
+                                        data-shipping_charge="{{ $product->shipping_charge }}"
                                         data-image="{{ $product->image ? asset('storage/' . $product->image) : '' }}"
                                         data-category_id="{{ $product->category_id }}"
                                         data-subcategory_id="{{ $product->subcategory_id }}"
@@ -217,6 +218,14 @@
                             @enderror
                         </div>
 
+                        <div class="form-group">
+                            <label for="shipping_charge" class="form-label">Delivery Charge</label>
+                            <input type="number" class="form-control" id="shipping_charge" name="shipping_charge" value="{{ old('shipping_charge', 0) }}" min="0" step="0.01">
+                            @error('shipping_charge')
+                                <div class="form-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <div class="form-group full-width">
                             <label for="image" class="form-label">Product Image</label>
 
@@ -322,6 +331,16 @@
                         <div class="form-group">
                             <label for="edit_price" class="form-label">Price</label>
                             <input type="number" class="form-control" id="edit_price" name="price">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_sale_price" class="form-label">Sale Price</label>
+                            <input type="number" class="form-control" id="edit_sale_price" name="sale_price" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_shipping_charge" class="form-label">Delivery Charge</label>
+                            <input type="number" class="form-control" id="edit_shipping_charge" name="shipping_charge" min="0" step="0.01">
                         </div>
 
                     </div>

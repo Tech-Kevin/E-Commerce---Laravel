@@ -35,6 +35,7 @@ class ProductReq extends FormRequest
             'image' => 'nullable|mimes:jpg,jpeg,png,webp|max:2048',
             'category_id' => 'nullable|exists:categories,id',
             'subcategory_id' => 'nullable|exists:subcategories,id',
+            'shipping_charge' => 'nullable|numeric|min:0',
         ];
     }
 }

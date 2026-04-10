@@ -30,6 +30,7 @@ class Product extends Model implements HasMedia
         'image',
         'is_active',
         'is_featured',
+        'shipping_charge',
     ];
 
     protected $casts = [

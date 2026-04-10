@@ -57,7 +57,7 @@ class DeliveryController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         if ($order->delivery_boy_id !== Auth::id()) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            return response()->json(['success' => false, 'message' => __('delivery.unauthorized')], 403);
         }
 
         $request->validate([
@@ -72,11 +72,11 @@ class DeliveryController extends Controller
     public function showVerifyPage(Order $order)
     {
         if ($order->delivery_boy_id !== Auth::id()) {
-            return redirect()->route('delivery.orders')->with('error', 'Unauthorized access.');
+            return redirect()->route('delivery.orders')->with('error', __('delivery.unauthorized_access'));
         }
 
         if ($order->status !== 'completed') {
-            return redirect()->route('delivery.orders')->with('error', 'Order must be marked as completed to verify delivery.');
+            return redirect()->route('delivery.orders')->with('error', __('delivery.must_complete_to_verify'));
         }
 
         return view('delivery.verify', compact('order'));
@@ -85,7 +85,7 @@ class DeliveryController extends Controller
     public function sendOtp(Request $request, Order $order)
     {
         if ($order->delivery_boy_id !== Auth::id()) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            return response()->json(['success' => false, 'message' => __('delivery.unauthorized')], 403);
         }
 
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -99,21 +99,23 @@ class DeliveryController extends Controller
         ]);
 
         $phone = $order->phone;
-        $message = "Your delivery OTP for order #{$order->order_number} is: {$otp}. Valid for 10 minutes. Do not share this with anyone.";
+        $message = __('delivery.sms_otp_message', ['number' => $order->order_number, 'otp' => $otp]);
 
         $smsService = new SmsService();
         $sent = $smsService->send($phone, $message);
 
         return response()->json([
             'success' => true,
-            'message' => $sent ? 'OTP sent to registered number.' : 'OTP generated (SMS service unavailable). OTP: ' . $otp,
+            'message' => $sent
+                ? __('delivery.otp_sent')
+                : __('delivery.otp_generated_fallback', ['otp' => $otp]),
         ]);
     }
 
     public function verifyOtp(Request $request, Order $order)
     {
         if ($order->delivery_boy_id !== Auth::id()) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            return response()->json(['success' => false, 'message' => __('delivery.unauthorized')], 403);
         }
 
         $request->validate([
@@ -126,25 +128,25 @@ class DeliveryController extends Controller
             ->first();
 
         if (!$deliveryOtp) {
-            return response()->json(['success' => false, 'message' => 'Invalid OTP.']);
+            return response()->json(['success' => false, 'message' => __('delivery.invalid_otp')]);
         }
 
         if ($deliveryOtp->isExpired()) {
-            return response()->json(['success' => false, 'message' => 'OTP has expired. Please request a new one.']);
+            return response()->json(['success' => false, 'message' => __('delivery.otp_expired')]);
         }
 
         $deliveryOtp->update(['is_verified' => true]);
 
         return response()->json([
             'success' => true,
-            'message' => 'OTP verified. Please collect customer signature.',
+            'message' => __('delivery.otp_verified'),
         ]);
     }
 
     public function confirmDelivery(Request $request, Order $order)
     {
         if ($order->delivery_boy_id !== Auth::id()) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            return response()->json(['success' => false, 'message' => __('delivery.unauthorized')], 403);
         }
 
         $request->validate([
@@ -156,7 +158,7 @@ class DeliveryController extends Controller
             ->first();
 
         if (!$verifiedOtp) {
-            return response()->json(['success' => false, 'message' => 'OTP not verified yet.']);
+            return response()->json(['success' => false, 'message' => __('delivery.otp_not_verified')]);
         }
 
         // Save signature as image file
@@ -178,7 +180,7 @@ class DeliveryController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Order delivered successfully!',
+            'message' => __('delivery.order_delivered_success'),
         ]);
     }
 
@@ -199,6 +201,17 @@ class DeliveryController extends Controller
 
         Auth::user()->update($request->only('name', 'email', 'address', 'number'));
 
-        return redirect()->route('delivery.settings')->with('success', 'Settings saved successfully.');
+        return redirect()->route('delivery.settings')->with('success', __('delivery.settings_saved'));
+    }
+
+    public function switchLanguage(Request $request)
+    {
+        $request->validate([
+            'locale' => 'required|in:en,hi',
+        ]);
+
+        Auth::user()->update(['locale' => $request->locale]);
+
+        return redirect()->back()->with('success', __('delivery.language_changed'));
     }
 }

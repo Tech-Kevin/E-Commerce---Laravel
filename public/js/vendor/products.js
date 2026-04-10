@@ -64,6 +64,7 @@ function openEditModal(button) {
     const price           = button.getAttribute('data-price');
     const salePrice       = button.getAttribute('data-sale_price');
     const image           = button.getAttribute('data-image');
+    const shippingCharge  = button.getAttribute('data-shipping_charge');
     const categoryId      = button.getAttribute('data-category_id');
     const subcategoryId   = button.getAttribute('data-subcategory_id');
 
@@ -79,6 +80,7 @@ function openEditModal(button) {
     document.getElementById('edit_stock').value            = stock ?? '';
     document.getElementById('edit_price').value            = price ?? '';
     document.getElementById('edit_sale_price').value       = salePrice ?? '';
+    document.getElementById('edit_shipping_charge').value  = shippingCharge ?? '0';
     document.getElementById('edit_category_id').value      = categoryId ?? '';
     loadSubcategories(categoryId, document.getElementById('edit_subcategory_id'), subcategoryId);
 

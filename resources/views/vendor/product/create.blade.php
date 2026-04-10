@@ -90,6 +90,13 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="shipping_charge" class="form-label">Delivery Charge</label>
+                        <input type="number" class="form-control" id="shipping_charge" name="shipping_charge" value="{{ old('shipping_charge', 0) }}" min="0" step="0.01">
+                        @error('shipping_charge')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="image" class="form-label">Product Image</label>
                         <input type="file" class="form-control" id="image" name="image">
                         @error('image')

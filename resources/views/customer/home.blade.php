@@ -1,44 +1,42 @@
 @extends('layouts.store')
 
-@section('title', 'Home')
+@section('title', __('store.home'))
 
 @section('content')
     {{-- ========== HERO SECTION ========== --}}
     <section class="hero-section reveal">
         <div class="store-container hero-grid">
             <div class="hero-content">
-                <span class="hero-badge">New Collection</span>
-                <h1>Shop smarter with premium everyday essentials</h1>
-                <p>
-                    Discover trending products, best prices, and a smooth shopping experience designed for comfort.
-                </p>
+                <span class="hero-badge">{{ __('store.new_collection') }}</span>
+                <h1>{{ __('store.hero_title') }}</h1>
+                <p>{{ __('store.hero_subtitle') }}</p>
 
                 <div class="hero-stats">
                     <div class="hero-stat">
                         <span class="stat-number" data-target="{{ $products->count() }}">0</span>
-                        <span class="stat-label">Products</span>
+                        <span class="stat-label">{{ __('store.products') }}</span>
                     </div>
                     <div class="hero-stat">
                         <span class="stat-number" data-target="{{ $categories->count() }}">0</span>
-                        <span class="stat-label">Categories</span>
+                        <span class="stat-label">{{ __('store.categories') }}</span>
                     </div>
                     <div class="hero-stat">
                         <span class="stat-number" data-target="{{ $bestSellers->sum('total_sold') }}">0</span>
-                        <span class="stat-label">Items Sold</span>
+                        <span class="stat-label">{{ __('store.items_sold') }}</span>
                     </div>
                 </div>
 
                 <div class="hero-actions">
-                    <a href="#products-section" class="primary-btn">Shop Now</a>
-                    <a href="#category-section" class="secondary-btn">Explore Categories</a>
+                    <a href="#products-section" class="primary-btn">{{ __('store.shop_now') }}</a>
+                    <a href="#category-section" class="secondary-btn">{{ __('store.explore_categories') }}</a>
                 </div>
             </div>
 
             <div class="hero-card">
                 <div class="hero-card-inner">
-                    <h3>Special Offer</h3>
-                    <p>Up to 40% off on selected products this week.</p>
-                    <a href="#products-section" class="mini-btn">View Deals</a>
+                    <h3>{{ __('store.special_offer') }}</h3>
+                    <p>{{ __('store.offer_text') }}</p>
+                    <a href="#products-section" class="mini-btn">{{ __('store.view_deals') }}</a>
                 </div>
             </div>
         </div>
@@ -49,8 +47,8 @@
         <div class="store-container">
             <div class="section-heading">
                 <div>
-                    <h2>Shop by Category</h2>
-                    <p>Browse products from popular categories</p>
+                    <h2>{{ __('store.shop_by_category') }}</h2>
+                    <p>{{ __('store.browse_categories') }}</p>
                 </div>
             </div>
 
@@ -70,29 +68,25 @@
         </div>
     </section>
 
-    
-
-    
-
     {{-- ========== ALL PRODUCTS ========== --}}
     <section class="products-section reveal" id="products-section">
         <div class="store-container">
             <div class="section-heading">
                 <div>
-                    <h2>All Products</h2>
-                    <p>Browse our full collection</p>
+                    <h2>{{ __('store.all_products') }}</h2>
+                    <p>{{ __('store.browse_collection') }}</p>
                 </div>
-                <a href="{{ route('home') }}" class="section-link">View All</a>
+                <a href="{{ route('home') }}" class="section-link">{{ __('store.view_all') }}</a>
             </div>
 
             @if (request('search'))
-                <p class="filter-label">Search results for "<strong>{{ request('search') }}</strong>"</p>
+                <p class="filter-label">{!! __('store.search_results_for', ['query' => request('search')]) !!}</p>
             @elseif (request('category'))
-                <p class="filter-label">Showing results for "<strong>{{ request('category') }}</strong>"</p>
+                <p class="filter-label">{!! __('store.showing_results_for', ['query' => request('category')]) !!}</p>
             @endif
 
             @if ($products->isEmpty())
-                <p class="filter-label">No products found.</p>
+                <p class="filter-label">{{ __('store.no_products_found') }}</p>
             @endif
 
             <div class="products-grid">
@@ -122,14 +116,14 @@
                                 </div>
 
                                 @if($product->stock > 0)
-                                    <span class="stock-badge in-stock">In Stock</span>
+                                    <span class="stock-badge in-stock">{{ __('store.in_stock') }}</span>
                                 @else
-                                    <span class="stock-badge out-stock">Out of Stock</span>
+                                    <span class="stock-badge out-stock">{{ __('store.out_of_stock') }}</span>
                                 @endif
                             </div>
 
                             <div class="product-actions">
-                                <span class="product-btn">View Details</span>
+                                <span class="product-btn">{{ __('store.view_details') }}</span>
                                 @auth
                                 <button class="wishlist-btn wishlist-toggle-btn" data-id="{{ $product->id }}" id="wl-{{ $product->id }}">
                                     <i class="fa-regular fa-heart"></i>
@@ -149,8 +143,8 @@
         <div class="store-container">
             <div class="section-heading">
                 <div>
-                    <h2>{{-- <i class="fa-solid fa-sparkles" style="color: #e67e4d;"></i>  --}}New Arrivals</h2>
-                    <p>Fresh additions to our store</p>
+                    <h2>{{ __('store.new_arrivals') }}</h2>
+                    <p>{{ __('store.fresh_additions') }}</p>
                 </div>
             </div>
 
@@ -159,7 +153,6 @@
                 <div class="scroll-track">
                     @foreach ($newArrivals as $product)
                         <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card scroll-card">
-                            {{-- <div class="newarrival-badge"><i class="fa-solid fa-bolt"></i> New</div> --}}
                             <div class="product-image-wrap">
                                 @if($product->getFirstMediaUrl('product_image'))
                                     <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
@@ -195,8 +188,8 @@
         <div class="store-container">
             <div class="section-heading">
                 <div>
-                    <h2>{{-- <i class="fa-solid fa-fire" style="color: #e67e4d;"></i> --}}</i>Best Sellers</h2>
-                    <p>Most loved products by our customers</p>
+                    <h2>{{ __('store.best_sellers') }}</h2>
+                    <p>{{ __('store.most_loved') }}</p>
                 </div>
             </div>
 
@@ -205,7 +198,6 @@
                 <div class="scroll-track">
                     @foreach ($bestSellers as $product)
                         <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card scroll-card">
-                            {{-- <div class="bestseller-badge"><i class="fa-solid fa-fire-flame-curved"></i> {{ $product->total_sold }} sold</div> --}}
                             <div class="product-image-wrap">
                                 @if($product->getFirstMediaUrl('product_image'))
                                     <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
@@ -241,11 +233,11 @@
             <div class="newsletter-card">
                 <div class="newsletter-content">
                     <i class="fa-solid fa-envelope-open-text newsletter-icon"></i>
-                    <h2>Stay in the loop</h2>
-                    <p>Get notified about new arrivals, exclusive deals, and more.</p>
-                    <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Thanks for subscribing!', true);">
-                        <input type="email" placeholder="Enter your email address" required>
-                        <button type="submit" class="primary-btn">Subscribe</button>
+                    <h2>{{ __('store.stay_in_loop') }}</h2>
+                    <p>{{ __('store.newsletter_text') }}</p>
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); showToast(@json(__('store.thanks_subscribe')), true);">
+                        <input type="email" placeholder="{{ __('store.enter_email') }}" required>
+                        <button type="submit" class="primary-btn">{{ __('store.subscribe') }}</button>
                     </form>
                 </div>
             </div>
@@ -258,24 +250,24 @@
             <div class="promo-box">
                 <i class="fa-solid fa-truck-fast"></i>
                 <div>
-                    <h4>Fast Delivery</h4>
-                    <p>Quick shipping on all major orders</p>
+                    <h4>{{ __('store.fast_delivery') }}</h4>
+                    <p>{{ __('store.fast_delivery_text') }}</p>
                 </div>
             </div>
 
             <div class="promo-box">
                 <i class="fa-solid fa-shield-heart"></i>
                 <div>
-                    <h4>Secure Payments</h4>
-                    <p>Trusted and safe checkout process</p>
+                    <h4>{{ __('store.secure_payments') }}</h4>
+                    <p>{{ __('store.secure_payments_text') }}</p>
                 </div>
             </div>
 
             <div class="promo-box">
                 <i class="fa-solid fa-rotate-left"></i>
                 <div>
-                    <h4>Easy Returns</h4>
-                    <p>Simple return process for eligible products</p>
+                    <h4>{{ __('store.easy_returns') }}</h4>
+                    <p>{{ __('store.easy_returns_text') }}</p>
                 </div>
             </div>
         </div>

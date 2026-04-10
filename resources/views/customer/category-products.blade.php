@@ -1,6 +1,6 @@
 @extends('layouts.store')
 
-@section('title', $category->name . ' Products')
+@section('title', $category->name . ' — ' . __('store.products'))
 
 @section('content')
     <section class="page-section">
@@ -8,10 +8,10 @@
             <div class="section-heading">
                 <div>
                     <h2>{{ $category->name }}</h2>
-                    <p>Browse all products in this category</p>
+                    <p>{{ __('store.browse_in_category') }}</p>
                 </div>
                 <a href="{{ route('home') }}" class="section-link">
-                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                    <i class="fa-solid fa-arrow-left"></i> {{ __('store.back_to_home') }}
                 </a>
             </div>
 
@@ -19,7 +19,7 @@
                 {{-- Side Panel --}}
                 <aside class="filter-panel">
                     <div class="filter-card">
-                        <h3><i class="fa-solid fa-layer-group"></i> Categories</h3>
+                        <h3><i class="fa-solid fa-layer-group"></i> {{ __('store.filter_categories') }}</h3>
                         <ul class="filter-category-list">
                             @foreach($categories as $cat)
                                 <li>
@@ -33,41 +33,41 @@
                     </div>
 
                     <div class="filter-card">
-                        <h3><i class="fa-solid fa-arrow-down-wide-short"></i> Sort By</h3>
+                        <h3><i class="fa-solid fa-arrow-down-wide-short"></i> {{ __('store.sort_by') }}</h3>
                         <div class="filter-sort-options">
                             <a href="{{ route('category.products', ['slug' => $category->slug ?? $category->id, 'sort' => 'name_asc', 'min_price' => request('min_price'), 'max_price' => request('max_price')]) }}"
                                class="filter-sort-btn {{ request('sort') == 'name_asc' ? 'active' : '' }}">
-                                <i class="fa-solid fa-arrow-down-a-z"></i> Name: A to Z
+                                <i class="fa-solid fa-arrow-down-a-z"></i> {{ __('store.name_a_z') }}
                             </a>
                             <a href="{{ route('category.products', ['slug' => $category->slug ?? $category->id, 'sort' => 'name_desc', 'min_price' => request('min_price'), 'max_price' => request('max_price')]) }}"
                                class="filter-sort-btn {{ request('sort') == 'name_desc' ? 'active' : '' }}">
-                                <i class="fa-solid fa-arrow-down-z-a"></i> Name: Z to A
+                                <i class="fa-solid fa-arrow-down-z-a"></i> {{ __('store.name_z_a') }}
                             </a>
                             <a href="{{ route('category.products', ['slug' => $category->slug ?? $category->id, 'sort' => 'price_asc', 'min_price' => request('min_price'), 'max_price' => request('max_price')]) }}"
                                class="filter-sort-btn {{ request('sort') == 'price_asc' ? 'active' : '' }}">
-                                <i class="fa-solid fa-arrow-down-short-wide"></i> Price: Low to High
+                                <i class="fa-solid fa-arrow-down-short-wide"></i> {{ __('store.price_low_high') }}
                             </a>
                             <a href="{{ route('category.products', ['slug' => $category->slug ?? $category->id, 'sort' => 'price_desc', 'min_price' => request('min_price'), 'max_price' => request('max_price')]) }}"
                                class="filter-sort-btn {{ request('sort') == 'price_desc' ? 'active' : '' }}">
-                                <i class="fa-solid fa-arrow-up-wide-short"></i> Price: High to Low
+                                <i class="fa-solid fa-arrow-up-wide-short"></i> {{ __('store.price_high_low') }}
                             </a>
                         </div>
                     </div>
 
                     <div class="filter-card">
-                        <h3><i class="fa-solid fa-indian-rupee-sign"></i> Price Range</h3>
+                        <h3><i class="fa-solid fa-indian-rupee-sign"></i> {{ __('store.price_range') }}</h3>
                         <form action="{{ route('category.products', $category->slug ?? $category->id) }}" method="GET" class="filter-price-form">
                             @if(request('sort'))
                                 <input type="hidden" name="sort" value="{{ request('sort') }}">
                             @endif
                             <div class="filter-price-inputs">
-                                <input type="number" name="min_price" placeholder="Min" value="{{ request('min_price') }}" class="filter-price-input">
+                                <input type="number" name="min_price" placeholder="{{ __('store.min') }}" value="{{ request('min_price') }}" class="filter-price-input">
                                 <span class="filter-price-sep">-</span>
-                                <input type="number" name="max_price" placeholder="Max" value="{{ request('max_price') }}" class="filter-price-input">
+                                <input type="number" name="max_price" placeholder="{{ __('store.max') }}" value="{{ request('max_price') }}" class="filter-price-input">
                             </div>
                             <div class="filter-price-actions">
-                                <button type="submit" class="filter-apply-btn">Apply Filter</button>
-                                <a href="{{ route('category.products', ['slug' => $category->slug ?? $category->id, 'sort' => request('sort')]) }}" class="filter-clear-btn">Clear</a>
+                                <button type="submit" class="filter-apply-btn">{{ __('store.apply_filter') }}</button>
+                                <a href="{{ route('category.products', ['slug' => $category->slug ?? $category->id, 'sort' => request('sort')]) }}" class="filter-clear-btn">{{ __('store.clear') }}</a>
                             </div>
                         </form>
                     </div>
@@ -76,15 +76,15 @@
                 {{-- Products Area --}}
                 <div class="category-products-area">
                     <div class="category-results-bar">
-                        <p>Showing <strong>{{ $products->count() }}</strong> product{{ $products->count() !== 1 ? 's' : '' }} in <strong>{{ $category->name }}</strong></p>
+                        <p>{!! __('store.showing_products', ['count' => '<strong>' . $products->count() . '</strong>', 'category' => '<strong>' . $category->name . '</strong>']) !!}</p>
                         <div class="active-filters">
                             @if(request('sort'))
                                 <span class="active-filter-tag">
                                     @switch(request('sort'))
                                         @case('name_asc') A-Z @break
                                         @case('name_desc') Z-A @break
-                                        @case('price_asc') Price: Low-High @break
-                                        @case('price_desc') Price: High-Low @break
+                                        @case('price_asc') {{ __('store.price_low_high') }} @break
+                                        @case('price_desc') {{ __('store.price_high_low') }} @break
                                     @endswitch
                                 </span>
                             @endif
@@ -93,9 +93,9 @@
                                     @if(request('min_price') && request('max_price'))
                                         ₹ {{ request('min_price') }} - ₹ {{ request('max_price') }}
                                     @elseif(request('min_price'))
-                                        From ₹ {{ request('min_price') }}
+                                        {{ __('store.from_price', ['price' => request('min_price')]) }}
                                     @else
-                                        Up to ₹ {{ request('max_price') }}
+                                        {{ __('store.up_to_price', ['price' => request('max_price')]) }}
                                     @endif
                                 </span>
                             @endif
@@ -106,9 +106,9 @@
                         <div class="empty-cart-card">
                             <div class="empty-cart-content">
                                 <i class="fa-solid fa-box-open"></i>
-                                <h3>No products found</h3>
-                                <p>Try adjusting your filters or browse another category.</p>
-                                <a href="{{ route('category.products', $category->slug ?? $category->id) }}" class="primary-btn" style="display:inline-flex; margin-top:10px;">Clear All Filters</a>
+                                <h3>{{ __('store.no_products_in_cat') }}</h3>
+                                <p>{{ __('store.adjust_filters') }}</p>
+                                <a href="{{ route('category.products', $category->slug ?? $category->id) }}" class="primary-btn" style="display:inline-flex; margin-top:10px;">{{ __('store.clear_all_filters') }}</a>
                             </div>
                         </div>
                     @else
@@ -126,7 +126,6 @@
                                     </div>
 
                                     <div class="product-card-body">
-                                        {{-- <span class="product-category">{{ $product->category->name ?? 'General' }}</span> --}}
                                         <h3>{{ $product->name }}</h3>
 
                                         <div class="product-meta">
@@ -140,14 +139,14 @@
                                             </div>
 
                                             @if($product->stock > 0)
-                                                <span class="stock-badge in-stock">In Stock</span>
+                                                <span class="stock-badge in-stock">{{ __('store.in_stock') }}</span>
                                             @else
-                                                <span class="stock-badge out-stock">Out of Stock</span>
+                                                <span class="stock-badge out-stock">{{ __('store.out_of_stock') }}</span>
                                             @endif
                                         </div>
 
                                         <div class="product-actions">
-                                            <span class="product-btn">View Details</span>
+                                            <span class="product-btn">{{ __('store.view_details') }}</span>
                                             @auth
                                             <button class="wishlist-btn wishlist-toggle-btn" data-id="{{ $product->id }}" id="wl-{{ $product->id }}">
                                                 <i class="fa-regular fa-heart"></i>

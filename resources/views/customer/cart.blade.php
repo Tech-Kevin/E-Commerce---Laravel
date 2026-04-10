@@ -1,14 +1,14 @@
 @extends('layouts.store')
 
-@section('title', 'Cart')
+@section('title', __('store.cart'))
 
 @section('content')
 <section class="page-section">
     <div class="store-container">
         <div class="section-heading">
             <div>
-                <h2>Shopping Cart</h2>
-                <p>Review products before checkout</p>
+                <h2>{{ __('store.shopping_cart') }}</h2>
+                <p>{{ __('store.review_products') }}</p>
             </div>
         </div>
 
@@ -16,8 +16,8 @@
             <div class="cart-layout">
                 <div class="cart-items-card">
                     <div class="cart-card-header">
-                        <h3>Cart Items</h3>
-                        <span>{{ count($cart) }} Product(s)</span>
+                        <h3>{{ __('store.cart_items') }}</h3>
+                        <span>{{ __('store.product_count', ['count' => count($cart)]) }}</span>
                     </div>
 
                     <div id="cart-items-wrapper">
@@ -39,16 +39,15 @@
                                 </div>
 
                                 <div class="cart-item-info">
-                                    <span class="cart-item-badge">In Cart</span>
+                                    <span class="cart-item-badge">{{ __('store.in_cart') }}</span>
                                     <h3>{{ $item['name'] }}</h3>
-                                    {{-- <p>{{ $item['description'] }}</p> --}}
                                     <div class="cart-price-row">
                                         <span class="cart-sale-price">₹ {{ number_format($price, 2) }}</span>
                                     </div>
                                 </div>
 
                                 <div class="cart-item-qty-block">
-                                    <label>Quantity</label>
+                                    <label>{{ __('store.quantity') }}</label>
                                     <div class="cart-item-qty">
                                         <button type="button" class="qty-btn decrease-btn" data-id="{{ $item['id'] }}">-</button>
                                         <input type="text" value="{{ $item['quantity'] }}" readonly id="qty-input-{{ $item['id'] }}">
@@ -57,13 +56,13 @@
                                 </div>
 
                                 <div class="cart-item-total-block">
-                                    <label>Total</label>
+                                    <label>{{ __('store.total') }}</label>
                                     <div class="cart-item-total" id="item-total-{{ $item['id'] }}">
                                         ₹ {{ number_format($itemTotal, 2) }}
                                     </div>
 
                                     <button type="button" class="remove-cart-btn" data-id="{{ $item['id'] }}">
-                                        Remove
+                                        {{ __('store.remove') }}
                                     </button>
                                 </div>
                             </div>
@@ -73,35 +72,35 @@
 
                 <div class="cart-summary-card">
                     <div class="summary-top">
-                        <h3>Order Summary</h3>
-                        <p>Final amount for your purchase</p>
+                        <h3>{{ __('store.order_summary') }}</h3>
+                        <p>{{ __('store.final_amount') }}</p>
                     </div>
 
                     <div class="summary-row">
-                        <span>Subtotal</span>
+                        <span>{{ __('store.subtotal') }}</span>
                         <span id="cart-subtotal">₹ {{ number_format($subtotal, 2) }}</span>
                     </div>
 
                     <div class="summary-row">
-                        <span>Shipping</span>
+                        <span>{{ __('store.shipping') }}</span>
                         <span id="cart-shipping">₹ {{ number_format($shipping, 2) }}</span>
                     </div>
 
                     <div class="summary-row total">
-                        <span>Grand Total</span>
+                        <span>{{ __('store.grand_total') }}</span>
                         <span id="cart-grand-total">₹ {{ number_format($grand_total, 2) }}</span>
                     </div>
 
-                    <a href="{{ route('customer.checkout') }}" class="primary-btn full-btn">Proceed to Checkout</a>
+                    <a href="{{ route('customer.checkout') }}" class="primary-btn full-btn">{{ __('store.proceed_checkout') }}</a>
                 </div>
             </div>
         @else
             <div class="table-card empty-cart-card">
                 <div class="empty-cart-content">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <h3>Your Cart is empty</h3>
-                    <p>Looks like you have not added anything yet.</p>
-                    <a href="{{ route('home') }}" class="primary-btn">Continue Shopping</a>
+                    <h3>{{ __('store.cart_empty') }}</h3>
+                    <p>{{ __('store.nothing_added') }}</p>
+                    <a href="{{ route('home') }}" class="primary-btn">{{ __('store.continue_shopping') }}</a>
                 </div>
             </div>
         @endif

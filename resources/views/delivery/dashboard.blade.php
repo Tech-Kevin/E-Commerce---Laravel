@@ -1,8 +1,8 @@
 @extends('layouts.delivery')
 
-@section('title', 'Delivery Dashboard')
-@section('page_title', 'Dashboard')
-@section('page_subtitle', 'Track your deliveries and performance')
+@section('title', __('delivery.dashboard'))
+@section('page_title', __('delivery.dashboard'))
+@section('page_subtitle', __('delivery.track_deliveries'))
 
 @section('content')
     <section class="stats-grid">
@@ -11,9 +11,9 @@
                 <i class="fa-solid fa-box"></i>
             </div>
             <div class="stats-card-info">
-                <h3>Assigned Orders</h3>
+                <h3>{{ __('delivery.assigned_orders') }}</h3>
                 <h2>{{ $totalAssigned }}</h2>
-                <p>Pending delivery</p>
+                <p>{{ __('delivery.pending_delivery') }}</p>
             </div>
         </div>
 
@@ -22,9 +22,9 @@
                 <i class="fa-solid fa-hand-holding-box fa-solid fa-truck-pickup"></i>
             </div>
             <div class="stats-card-info">
-                <h3>Picked Up</h3>
+                <h3>{{ __('delivery.picked_up') }}</h3>
                 <h2>{{ $totalPickedUp }}</h2>
-                <p>Collected from vendor</p>
+                <p>{{ __('delivery.collected_from_vendor') }}</p>
             </div>
         </div>
 
@@ -33,9 +33,9 @@
                 <i class="fa-solid fa-truck-fast"></i>
             </div>
             <div class="stats-card-info">
-                <h3>On The Way</h3>
+                <h3>{{ __('delivery.on_the_way') }}</h3>
                 <h2>{{ $totalOnTheWay }}</h2>
-                <p>In transit to customer</p>
+                <p>{{ __('delivery.in_transit') }}</p>
             </div>
         </div>
 
@@ -44,9 +44,9 @@
                 <i class="fa-solid fa-flag-checkered"></i>
             </div>
             <div class="stats-card-info">
-                <h3>Completed</h3>
+                <h3>{{ __('delivery.completed') }}</h3>
                 <h2>{{ $totalCompleted }}</h2>
-                <p>Awaiting verification</p>
+                <p>{{ __('delivery.awaiting_verification') }}</p>
             </div>
         </div>
 
@@ -55,9 +55,9 @@
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div class="stats-card-info">
-                <h3>Delivered & Paid</h3>
+                <h3>{{ __('delivery.delivered_paid') }}</h3>
                 <h2>{{ $totalDelivered }}</h2>
-                <p>Successfully completed</p>
+                <p>{{ __('delivery.successfully_completed') }}</p>
             </div>
         </div>
     </section>
@@ -65,19 +65,19 @@
     <section class="dashboard-grid">
         <div class="dashboard-card large-card">
             <div class="card-header">
-                <h3>Recent Orders</h3>
-                <a href="{{ route('delivery.orders') }}" class="card-link">View All</a>
+                <h3>{{ __('delivery.recent_orders') }}</h3>
+                <a href="{{ route('delivery.orders') }}" class="card-link">{{ __('delivery.view_all') }}</a>
             </div>
 
             <div class="table-wrapper">
                 <table class="dashboard-table">
                     <thead>
                         <tr>
-                            <th>Order ID</th>
-                            <th>Customer</th>
-                            <th>Address</th>
-                            <th>Status</th>
-                            <th>Amount</th>
+                            <th>{{ __('delivery.order_id') }}</th>
+                            <th>{{ __('delivery.customer') }}</th>
+                            <th>{{ __('delivery.address') }}</th>
+                            <th>{{ __('delivery.status') }}</th>
+                            <th>{{ __('delivery.amount') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,11 +91,41 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" style="text-align:center; padding: 24px; color: #8a7769;">No orders assigned yet.</td>
+                            <td colspan="5" style="text-align:center; padding: 24px; color: #8a7769;">{{ __('delivery.no_orders_yet') }}</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            {{-- Mobile card view --}}
+            <div class="mobile-card">
+                @forelse($recentOrders as $order)
+                <div class="mobile-card-item">
+                    <div class="mobile-card-row">
+                        <span>{{ __('delivery.order') }}</span>
+                        <strong>#{{ $order->order_number }}</strong>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span>{{ __('delivery.customer') }}</span>
+                        <strong>{{ $order->full_name }}</strong>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span>{{ __('delivery.address') }}</span>
+                        <strong>{{ Str::limit($order->address, 30) }}</strong>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span>{{ __('delivery.status') }}</span>
+                        <span class="status-badge status-{{ $order->status }}">{{ ucfirst(str_replace('_', ' ', $order->status)) }}</span>
+                    </div>
+                    <div class="mobile-card-row">
+                        <span>{{ __('delivery.amount') }}</span>
+                        <strong>₹ {{ number_format($order->grand_total, 2) }}</strong>
+                    </div>
+                </div>
+                @empty
+                <p style="text-align:center; padding: 24px; color: #8a7769;">{{ __('delivery.no_orders_yet') }}</p>
+                @endforelse
             </div>
         </div>
     </section>
