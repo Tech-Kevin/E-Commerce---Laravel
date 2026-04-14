@@ -15,6 +15,15 @@ class CustomerMiddleware
             return redirect()->guest(route('loginForm'));
         }
 
+        if (!Auth::user()->is_active) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('loginForm')
+                ->with('error', 'Admin has blocked you contact to admin');
+        }
+
         return $next($request);
     }
 }

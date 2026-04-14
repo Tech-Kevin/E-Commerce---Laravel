@@ -8,6 +8,27 @@
     <title>@yield('title', __('delivery.panel_title'))</title>
     <link rel="stylesheet" href="{{ asset('css/delivery.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --delivery-primary: {{ $siteSetting?->delivery_primary_color ?? '#e67e4d' }};
+            --delivery-secondary: {{ $siteSetting?->delivery_secondary_color ?? '#f2af78' }};
+        }
+
+        .vendor-brand-icon,
+        .vendor-avatar {
+            background: linear-gradient(135deg, var(--delivery-secondary), var(--delivery-primary));
+        }
+
+        .vendor-nav-item.active,
+        .vendor-nav-item:hover {
+            color: var(--delivery-primary);
+        }
+
+        .primary-btn,
+        .action-btn {
+            background: linear-gradient(135deg, var(--delivery-secondary), var(--delivery-primary));
+        }
+    </style>
 </head>
 
 <body>
@@ -16,6 +37,16 @@
         @include('delivery.partials.sidebar')
 
         <div class="vendor-main">
+            @if(session()->has('impersonator_id'))
+                <div style="background:#2a1a0a;color:#ffd9b8;padding:12px 20px;display:flex;align-items:center;gap:12px;margin:0 20px 14px;border-radius:12px;font-size:14px;font-weight:600;">
+                    <i class="fa-solid fa-user-secret"></i>
+                    Impersonating <strong style="color:#fff">{{ Auth::user()->name }}</strong>
+                    <form action="{{ route('impersonate.stop') }}" method="POST" style="margin-left:auto;display:inline">
+                        @csrf
+                        <button type="submit" style="background:#e67e4d;color:#fff;border:none;padding:7px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;font-size:13px;">Return to Super Admin</button>
+                    </form>
+                </div>
+            @endif
             @if(session('success'))
                 <div id="flash-message" class="flash-message success">
                     {{ session('success') }}

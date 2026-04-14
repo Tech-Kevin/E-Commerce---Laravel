@@ -153,4 +153,19 @@ return [
     'secure_payments_text' => 'विश्वसनीय और सुरक्षित चेकआउट प्रक्रिया',
     'easy_returns'      => 'आसान रिटर्न',
     'easy_returns_text' => 'योग्य प्रोडक्ट के लिए सरल रिटर्न प्रक्रिया',
+
+    // Footer
+    'footer_about_default' => 'बेहतरीन कीमतों पर गुणवत्ता वाले उत्पादों के लिए आपका वन-स्टॉप डेस्टिनेशन।',
+    'quick_links'       => 'त्वरित लिंक',
+    'customer_service'  => 'ग्राहक सेवा',
+    'shipping_policy'   => 'शिपिंग नीति',
+    'returns_policy'    => 'रिटर्न और रिफंड',
+    'faq'               => 'सामान्य प्रश्न',
+    'contact_us'        => 'संपर्क करें',
+    'secure_checkout'   => 'सुरक्षित चेकआउट गारंटी',
+
+    // Extra
+    'confirmation'      => 'पुष्टि',
+    'edit_profile'      => 'प्रोफ़ाइल संपादित करें',
+    'units'             => 'इकाइयां',
 ];

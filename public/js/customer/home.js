@@ -19,7 +19,7 @@ document.querySelectorAll('.wishlist-toggle-btn').forEach(function (btn) {
         .then(function (data) {
             showToast(data.message, data.status);
             icon.className  = data.in_wishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-            icon.style.color = data.in_wishlist ? '#e05a2b' : '';
+            icon.style.color = data.in_wishlist ? '#ef4444' : '';
             updateBadge('wishlist-count', data.wishlist_count);
         })
         .catch(function () { showToast('Something went wrong.', false); });
@@ -30,20 +30,20 @@ document.querySelectorAll('.wishlist-toggle-btn').forEach(function (btn) {
 // Scroll Reveal Animation
 // ========================
 (function () {
-    var reveals = document.querySelectorAll('.reveal');
+    var reveals = document.querySelectorAll('.reveal, .reveal-children');
 
     function checkReveal() {
         var windowHeight = window.innerHeight;
         reveals.forEach(function (el) {
             var top = el.getBoundingClientRect().top;
-            if (top < windowHeight - 80) {
+            if (top < windowHeight - 60) {
                 el.classList.add('visible');
             }
         });
     }
 
     window.addEventListener('scroll', checkReveal);
-    checkReveal(); // trigger on load
+    checkReveal();
 })();
 
 // ========================
@@ -63,14 +63,14 @@ document.querySelectorAll('.wishlist-toggle-btn').forEach(function (btn) {
             animated = true;
             counters.forEach(function (counter) {
                 var target = parseInt(counter.getAttribute('data-target'), 10) || 0;
-                var duration = 1500;
+                var duration = 1200;
                 var startTime = null;
 
                 function step(timestamp) {
                     if (!startTime) startTime = timestamp;
                     var progress = Math.min((timestamp - startTime) / duration, 1);
-                    // ease out quad
-                    var eased = 1 - (1 - progress) * (1 - progress);
+                    // ease out cubic
+                    var eased = 1 - Math.pow(1 - progress, 3);
                     counter.textContent = Math.floor(eased * target);
                     if (progress < 1) {
                         requestAnimationFrame(step);
@@ -85,7 +85,7 @@ document.querySelectorAll('.wishlist-toggle-btn').forEach(function (btn) {
     }
 
     window.addEventListener('scroll', animateCounters);
-    animateCounters(); // trigger on load
+    animateCounters();
 })();
 
 // ========================

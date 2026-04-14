@@ -11,7 +11,7 @@
             <div class="card-header products-header">
                 <div>
                     <h3>All Products</h3>
-                    <p>View and manage your store inventory</p>
+                    <p>View, bulk-edit and manage your store inventory</p>
                 </div>
 
                 <button type="button" class="add-product-btn" id="openProductModal">
@@ -19,10 +19,26 @@
                 </button>
             </div>
 
+            <div class="sa-bulk-bar" id="saBulkBar">
+                <div class="sa-bulk-info">
+                    <strong><span id="saBulkCount">0</span></strong> selected
+                </div>
+                <div class="sa-bulk-actions">
+                    <input type="number" id="saBulkStock" class="sa-input-sm" placeholder="Set stock to">
+                    <button type="button" class="sa-btn sa-btn-ghost" data-sa-bulk="stock">Apply Stock</button>
+
+                    <input type="number" id="saBulkPercent" class="sa-input-sm" placeholder="% e.g. -10">
+                    <button type="button" class="sa-btn sa-btn-ghost" data-sa-bulk="price_percent">Adjust Price %</button>
+
+                    <button type="button" class="sa-btn sa-btn-danger" data-sa-bulk="delete">Delete Selected</button>
+                </div>
+            </div>
+
             <div class="table-wrapper">
                 <table class="products-table">
                     <thead>
                         <tr>
+                            <th style="width:36px"><input type="checkbox" id="saSelectAll"></th>
                             <th>Action</th>
                             <th>Name</th>
                             {{-- <th>Image</th> --}}
@@ -38,6 +54,7 @@
                     <tbody>
                         @foreach ($products as $product)
                             <tr>
+                                <td><input type="checkbox" class="sa-product-check" value="{{ $product->id }}"></td>
                                 <td>
 
                                     <button type="button" class="table-action-btn edit-btn" data-id="{{ $product->id }}"
@@ -104,7 +121,7 @@
 
                         @if($products->isEmpty())
                             <tr>
-                                <td colspan="7" class="empty-state">
+                                <td colspan="9" class="empty-state">
                                     No products found. Start by adding your first product.
                                 </td>
                             </tr>
@@ -378,5 +395,63 @@
 
 @push('scripts')
     <script src="{{ asset('js/vendor/products.js') }}"></script>
+    <script>
+    (function () {
+        const token = document.querySelector('meta[name="csrf-token"]').content;
+        const selectAll = document.getElementById('saSelectAll');
+        const checkboxes = () => document.querySelectorAll('.sa-product-check');
+        const bar = document.getElementById('saBulkBar');
+        const countEl = document.getElementById('saBulkCount');
+
+        function refresh() {
+            const selected = [...checkboxes()].filter(c => c.checked).map(c => c.value);
+            countEl.textContent = selected.length;
+            bar.classList.toggle('visible', selected.length > 0);
+            return selected;
+        }
+
+        selectAll?.addEventListener('change', () => {
+            checkboxes().forEach(c => c.checked = selectAll.checked);
+            refresh();
+        });
+
+        document.addEventListener('change', e => {
+            if (e.target.classList.contains('sa-product-check')) refresh();
+        });
+
+        document.querySelectorAll('[data-sa-bulk]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const ids = refresh();
+                if (!ids.length) { alert('No products selected.'); return; }
+                const action = btn.dataset.saBulk;
+                let value = null;
+                if (action === 'stock') value = document.getElementById('saBulkStock').value;
+                if (action === 'price_percent') value = document.getElementById('saBulkPercent').value;
+                if (action === 'delete' && !confirm(`Delete ${ids.length} product(s) permanently?`)) return;
+
+                try {
+                    const res = await fetch('{{ route("vendor.products.bulk") }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ action, ids, value }),
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Failed');
+                    }
+                } catch (e) {
+                    alert(e.message);
+                }
+            });
+        });
+    })();
+    </script>
 @endpush
 @endsection

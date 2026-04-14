@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,13 +21,17 @@ class VendorController extends Controller
         $totalProducts = Product::count();
         $totalOrders   = Order::count();
         $totalCustomers = User::where('role', 'customer')->count();
+        $totalDeliveryBoys = User::where('role', 'delivery')->count();
+        $totalVendors = User::where('role', 'vendor')->count();
+        $totalUsers = User::count();
         $totalRevenue  = Order::where('status', '!=', 'cancelled')->sum('grand_total');
         $recentOrders  = Order::with(['user', 'items'])->latest()->take(8)->get();
         $topProducts   = Product::withCount('orders')->orderByDesc('orders_count')->take(5)->get();
 
         return view('vendor.dashboard', compact(
             'totalProducts', 'totalOrders', 'totalCustomers',
-            'totalRevenue', 'recentOrders', 'topProducts'
+            'totalRevenue', 'recentOrders', 'topProducts',
+            'totalDeliveryBoys', 'totalVendors', 'totalUsers'
         ));
     }
 
@@ -59,7 +64,10 @@ class VendorController extends Controller
             'delivery_boy_id' => 'required|exists:users,id',
         ]);
 
-        $deliveryBoy = User::where('id', $request->delivery_boy_id)->where('role', 'delivery')->firstOrFail();
+        $deliveryBoy = User::where('id', $request->delivery_boy_id)
+            ->where('role', 'delivery')
+            ->where('is_active', true)
+            ->firstOrFail();
 
         $order->update(['delivery_boy_id' => $deliveryBoy->id]);
 
@@ -72,7 +80,7 @@ class VendorController extends Controller
     public function ShowOrders()
     {
         $orders = Order::with(['user', 'items', 'deliveryBoy'])->latest()->get();
-        $deliveryBoys = User::where('role', 'delivery')->get();
+        $deliveryBoys = User::where('role', 'delivery')->where('is_active', true)->get();
         return view('vendor.order', compact('orders', 'deliveryBoys'));
     }
 
@@ -83,7 +91,134 @@ class VendorController extends Controller
             ->withSum('orders', 'grand_total')
             ->latest()
             ->get();
+
         return view('vendor.customer', compact('customers'));
+    }
+
+    public function ShowDeliveryBoys()
+    {
+        $deliveryBoys = User::where('role', 'delivery')
+            ->withCount([
+                'deliveryOrders as active_orders_count' => function ($query) {
+                    $query->whereNotIn('status', ['delivered', 'cancelled']);
+                },
+                'deliveryOrders as delivered_orders_count' => function ($query) {
+                    $query->where('status', 'delivered');
+                },
+            ])
+            ->latest()
+            ->get();
+
+        return view('vendor.delivery-boys', compact('deliveryBoys'));
+    }
+
+    public function updateUserStatus(Request $request, User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You cannot block your own account.',
+            ], 422);
+        }
+
+        $request->validate([
+            'is_active' => ['required', 'boolean'],
+        ]);
+
+        $user->update([
+            'is_active' => (bool) $request->boolean('is_active'),
+        ]);
+
+        if (!$user->is_active) {
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+        }
+
+        return response()->json([
+            'success' => true,
+            'is_active' => (bool) $user->is_active,
+            'message' => $user->is_active
+                ? 'User is active now.'
+                : 'User is blocked now.',
+        ]);
+    }
+
+    public function ShowUsers()
+    {
+        $users = User::withCount([
+            'orders',
+            'deliveryOrders as delivery_orders_count',
+        ])->latest()->get();
+
+        $summary = [
+            'total' => $users->count(),
+            'admins' => $users->where('role', 'admin')->count(),
+            'vendors' => $users->where('role', 'vendor')->count(),
+            'customers' => $users->where('role', 'customer')->count(),
+            'delivery' => $users->where('role', 'delivery')->count(),
+            'blocked' => $users->where('is_active', false)->count(),
+        ];
+
+        return view('vendor.users', compact('users', 'summary'));
+    }
+
+    public function updateManagedUser(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => ['sometimes', 'required', 'string', 'max:100'],
+            'email' => ['sometimes', 'required', 'email', 'unique:users,email,' . $user->id],
+            'role' => ['sometimes', 'required', Rule::in(['admin', 'vendor', 'customer', 'delivery'])],
+            'is_active' => ['sometimes', 'required', 'boolean'],
+            'address' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'number' => ['sometimes', 'nullable', 'string', 'max:15'],
+        ]);
+
+        if ($user->id === Auth::id() && ($request->has('role') || $request->has('is_active'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You cannot change your own role or active status.',
+            ], 422);
+        }
+
+        $payload = $request->only(['name', 'email', 'role', 'address', 'number']);
+        if ($request->has('is_active')) {
+            $payload['is_active'] = (bool) $request->boolean('is_active');
+        }
+
+        $user->update($payload);
+
+        if (array_key_exists('is_active', $payload) && !$payload['is_active']) {
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully.',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'is_active' => (bool) $user->is_active,
+            ],
+        ]);
+    }
+
+    public function destroyManagedUser(User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You cannot delete your own account.',
+            ], 422);
+        }
+
+        DB::table('sessions')->where('user_id', $user->id)->delete();
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully.',
+        ]);
     }
 
     public function ShowAnalytics()
@@ -202,7 +337,8 @@ class VendorController extends Controller
     public function ShowSettings()
     {
         $user = Auth::user();
-        return view('vendor.settings', compact('user'));
+        $siteSetting = SiteSetting::getSettings();
+        return view('vendor.settings', compact('user', 'siteSetting'));
     }
 
     public function updateSettings(Request $request)
@@ -212,10 +348,31 @@ class VendorController extends Controller
             'email'   => 'required|email|unique:users,email,' . Auth::id(),
             'address' => 'nullable|string|max:255',
             'number'  => 'nullable|string|max:15',
+            'store_name' => 'required|string|max:80',
+            'store_tagline' => 'required|string|max:120',
+            'vendor_primary_color' => ['required', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'vendor_secondary_color' => ['required', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'vendor_background_color' => ['required', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'store_primary_color' => ['required', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'store_secondary_color' => ['required', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'delivery_primary_color' => ['required', 'regex:/^#[A-Fa-f0-9]{6}$/'],
+            'delivery_secondary_color' => ['required', 'regex:/^#[A-Fa-f0-9]{6}$/'],
         ]);
 
         Auth::user()->update($request->only('name', 'email', 'address', 'number'));
+        SiteSetting::getSettings()->update($request->only([
+            'store_name',
+            'store_tagline',
+            'vendor_primary_color',
+            'vendor_secondary_color',
+            'vendor_background_color',
+            'store_primary_color',
+            'store_secondary_color',
+            'delivery_primary_color',
+            'delivery_secondary_color',
+        ]));
 
-        return redirect()->route('vendor.settings')->with('success', 'Settings saved successfully.');
+        return redirect()->route('vendor.settings')->with('success', 'Super admin settings saved successfully.');
     }
+
 }

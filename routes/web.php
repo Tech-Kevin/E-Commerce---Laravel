@@ -8,9 +8,12 @@ use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\delivery\DeliveryController;
+use App\Http\Controllers\vendor\CategoryController;
 use App\Http\Controllers\vendor\ProductController;
 use App\Http\Controllers\vendor\SaleController;
+use App\Http\Controllers\vendor\SuperAdminController;
 use App\Http\Controllers\vendor\VendorController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -104,9 +107,64 @@ Route::prefix('vendor')->middleware('vendor')->group(function () {
     Route::get('orders', [VendorController::class, 'ShowOrders'])->name('vendor.orders');
     Route::patch('orders/{order}/status', [VendorController::class, 'updateOrderStatus'])->name('vendor.order.status');
     Route::patch('orders/{order}/assign-delivery', [VendorController::class, 'assignDeliveryBoy'])->name('vendor.order.assign.delivery');
+    Route::get('users', [VendorController::class, 'ShowUsers'])->name('vendor.users.index');
+    Route::patch('users/{user}', [VendorController::class, 'updateManagedUser'])->name('vendor.users.update');
+    Route::delete('users/{user}', [VendorController::class, 'destroyManagedUser'])->name('vendor.users.destroy');
     Route::get('customers', [VendorController::class, 'ShowCustomers'])->name('vendor.customers');
+    Route::get('delivery-boys', [VendorController::class, 'ShowDeliveryBoys'])->name('vendor.delivery-boys');
+    Route::patch('users/{user}/status', [VendorController::class, 'updateUserStatus'])->name('vendor.users.status');
     Route::get('analytics', [VendorController::class, 'ShowAnalytics'])->name('vendor.analytics');
     Route::get('earnings', [VendorController::class, 'ShowEarnings'])->name('vendor.earnings');
     Route::get('settings', [VendorController::class, 'ShowSettings'])->name('vendor.settings');
     Route::put('settings/update', [VendorController::class, 'updateSettings'])->name('vendor.settings.update');
+
+    // -----------------------------------------------------
+    // SUPER ADMIN — Categories & Subcategories
+    // -----------------------------------------------------
+    Route::get('categories', [CategoryController::class, 'index'])->name('vendor.categories');
+    Route::post('categories', [CategoryController::class, 'storeCategory'])->name('vendor.categories.store');
+    Route::put('categories/{category}', [CategoryController::class, 'updateCategory'])->name('vendor.categories.update');
+    Route::delete('categories/{category}', [CategoryController::class, 'destroyCategory'])->name('vendor.categories.destroy');
+    Route::patch('categories/{category}/toggle', [CategoryController::class, 'toggleCategoryStatus'])->name('vendor.categories.toggle');
+
+    Route::post('subcategories', [CategoryController::class, 'storeSubcategory'])->name('vendor.subcategories.store');
+    Route::put('subcategories/{subcategory}', [CategoryController::class, 'updateSubcategory'])->name('vendor.subcategories.update');
+    Route::delete('subcategories/{subcategory}', [CategoryController::class, 'destroySubcategory'])->name('vendor.subcategories.destroy');
+
+    // -----------------------------------------------------
+    // SUPER ADMIN — Users (create + password reset + impersonate)
+    // -----------------------------------------------------
+    Route::post('users', [SuperAdminController::class, 'storeUser'])->name('vendor.users.store');
+    Route::patch('users/{user}/password', [SuperAdminController::class, 'resetUserPassword'])->name('vendor.users.password');
+    Route::get('users/{user}/impersonate', [SuperAdminController::class, 'impersonate'])->name('vendor.users.impersonate');
+
+    // -----------------------------------------------------
+    // SUPER ADMIN — Orders (full edit, delete, payment ops)
+    // -----------------------------------------------------
+    Route::get('orders/{order}/edit', [SuperAdminController::class, 'editOrder'])->name('vendor.orders.edit');
+    Route::put('orders/{order}', [SuperAdminController::class, 'updateOrder'])->name('vendor.orders.update');
+    Route::delete('orders/{order}', [SuperAdminController::class, 'destroyOrder'])->name('vendor.orders.destroy');
+    Route::patch('orders/{order}/mark-paid', [SuperAdminController::class, 'markOrderPaid'])->name('vendor.orders.paid');
+    Route::patch('orders/{order}/refund', [SuperAdminController::class, 'refundOrder'])->name('vendor.orders.refund');
+
+    // -----------------------------------------------------
+    // SUPER ADMIN — Product bulk actions
+    // -----------------------------------------------------
+    Route::post('products/bulk', [SuperAdminController::class, 'bulkProducts'])->name('vendor.products.bulk');
+
+    // -----------------------------------------------------
+    // SUPER ADMIN — Site content (logo, favicon, hero, footer, contact)
+    // -----------------------------------------------------
+    Route::get('site-content', [SuperAdminController::class, 'showContent'])->name('vendor.site.content');
+    Route::put('site-content', [SuperAdminController::class, 'updateContent'])->name('vendor.site.content.update');
+
+    // -----------------------------------------------------
+    // SUPER ADMIN — System tools (cache, migrate, logs)
+    // -----------------------------------------------------
+    Route::get('system', [SuperAdminController::class, 'showSystem'])->name('vendor.system');
+    Route::post('system/run', [SuperAdminController::class, 'runSystemAction'])->name('vendor.system.run');
 });
+
+// Impersonation exit — available to any session that has an impersonator stashed
+Route::post('impersonate/stop', [SuperAdminController::class, 'stopImpersonate'])
+    ->name('impersonate.stop');

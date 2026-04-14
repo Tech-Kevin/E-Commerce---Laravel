@@ -5,6 +5,13 @@
 @section('content')
     <section class="page-section">
         <div class="store-container">
+            {{-- Breadcrumb --}}
+            <nav style="margin-bottom:20px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text-faint);">
+                <a href="{{ route('home') }}" style="color:var(--text-muted);">{{ __('store.home') }}</a>
+                <i class="fa-solid fa-chevron-right" style="font-size:9px;"></i>
+                <span style="color:var(--text-primary);font-weight:600;">{{ $category->name }}</span>
+            </nav>
+
             <div class="section-heading">
                 <div>
                     <h2>{{ $category->name }}</h2>
@@ -62,7 +69,7 @@
                             @endif
                             <div class="filter-price-inputs">
                                 <input type="number" name="min_price" placeholder="{{ __('store.min') }}" value="{{ request('min_price') }}" class="filter-price-input">
-                                <span class="filter-price-sep">-</span>
+                                <span class="filter-price-sep">—</span>
                                 <input type="number" name="max_price" placeholder="{{ __('store.max') }}" value="{{ request('max_price') }}" class="filter-price-input">
                             </div>
                             <div class="filter-price-actions">
@@ -91,7 +98,7 @@
                             @if(request('min_price') || request('max_price'))
                                 <span class="active-filter-tag">
                                     @if(request('min_price') && request('max_price'))
-                                        ₹ {{ request('min_price') }} - ₹ {{ request('max_price') }}
+                                        ₹ {{ request('min_price') }} — ₹ {{ request('max_price') }}
                                     @elseif(request('min_price'))
                                         {{ __('store.from_price', ['price' => request('min_price')]) }}
                                     @else
@@ -103,25 +110,28 @@
                     </div>
 
                     @if($products->isEmpty())
-                        <div class="empty-cart-card">
-                            <div class="empty-cart-content">
-                                <i class="fa-solid fa-box-open"></i>
-                                <h3>{{ __('store.no_products_in_cat') }}</h3>
-                                <p>{{ __('store.adjust_filters') }}</p>
-                                <a href="{{ route('category.products', $category->slug ?? $category->id) }}" class="primary-btn" style="display:inline-flex; margin-top:10px;">{{ __('store.clear_all_filters') }}</a>
-                            </div>
+                        <div class="empty-state" style="padding:48px 24px;">
+                            <i class="fa-solid fa-box-open"></i>
+                            <h3>{{ __('store.no_products_in_cat') }}</h3>
+                            <p>{{ __('store.adjust_filters') }}</p>
+                            <a href="{{ route('category.products', $category->slug ?? $category->id) }}" class="primary-btn" style="margin-top:10px;">{{ __('store.clear_all_filters') }}</a>
                         </div>
                     @else
-                        <div class="products-grid products-grid-3">
+                        <div class="products-grid products-grid-3 reveal-children">
                             @foreach ($products as $product)
                                 <a href="{{ route('product.details', ['id' => $product->id]) }}" class="product-card">
                                     <div class="product-image-wrap">
+                                        @if($product->sale_price)
+                                            @php $discount = round((($product->price - $product->sale_price) / $product->price) * 100); @endphp
+                                            <span class="product-badge sale">-{{ $discount }}%</span>
+                                        @elseif($product->created_at && $product->created_at->gt(now()->subDays(7)))
+                                            <span class="product-badge new">New</span>
+                                        @endif
+
                                         @if($product->getFirstMediaUrl('product_image'))
                                             <img src="{{ $product->getFirstMediaUrl('product_image') }}" alt="{{ $product->name }}" class="product-image">
                                         @else
-                                            <div class="product-placeholder">
-                                                <i class="fa-solid fa-box-open"></i>
-                                            </div>
+                                            <div class="product-placeholder"><i class="fa-solid fa-box-open"></i></div>
                                         @endif
                                     </div>
 
@@ -131,10 +141,10 @@
                                         <div class="product-meta">
                                             <div class="price-block">
                                                 @if($product->sale_price)
-                                                    <span class="old-price">₹ {{ $product->price }}</span>
-                                                    <span class="sale-price">₹ {{ $product->sale_price }}</span>
+                                                    <span class="sale-price">₹ {{ number_format($product->sale_price, 0) }}</span>
+                                                    <span class="old-price">₹ {{ number_format($product->price, 0) }}</span>
                                                 @else
-                                                    <span class="regular-price">₹ {{ $product->price }}</span>
+                                                    <span class="regular-price">₹ {{ number_format($product->price, 0) }}</span>
                                                 @endif
                                             </div>
 
@@ -148,7 +158,7 @@
                                         <div class="product-actions">
                                             <span class="product-btn">{{ __('store.view_details') }}</span>
                                             @auth
-                                            <button class="wishlist-btn wishlist-toggle-btn" data-id="{{ $product->id }}" id="wl-{{ $product->id }}">
+                                            <button class="wishlist-btn wishlist-toggle-btn" data-id="{{ $product->id }}" id="wl-{{ $product->id }}" onclick="event.preventDefault();event.stopPropagation();">
                                                 <i class="fa-regular fa-heart"></i>
                                             </button>
                                             @endauth
@@ -185,12 +195,26 @@
             .then(function (data) {
                 showToast(data.message, data.status);
                 icon.className   = data.in_wishlist ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-                icon.style.color = data.in_wishlist ? '#e05a2b' : '';
+                icon.style.color = data.in_wishlist ? '#ef4444' : '';
                 updateBadge('wishlist-count', data.wishlist_count);
             })
             .catch(function () { showToast('Something went wrong.', false); });
         });
     });
+
+    // Scroll reveal for category page
+    (function() {
+        var reveals = document.querySelectorAll('.reveal-children');
+        function check() {
+            reveals.forEach(function(el) {
+                if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+        window.addEventListener('scroll', check);
+        check();
+    })();
     </script>
 @endpush
 @endsection

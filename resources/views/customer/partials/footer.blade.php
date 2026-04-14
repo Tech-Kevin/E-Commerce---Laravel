@@ -1,10 +1,14 @@
 <header class="store-header">
     <div class="store-container header-inner">
         <a href="{{ route('home') }}" class="store-logo">
-            <div class="store-logo-icon">E</div>
+            @if($siteSetting?->logo_path)
+                <img src="{{ asset('storage/' . $siteSetting->logo_path) }}" alt="{{ $siteSetting?->store_name }}" style="height:40px;border-radius:10px;">
+            @else
+                <div class="store-logo-icon">{{ strtoupper(substr(($siteSetting?->store_name ?? 'E'), 0, 1)) }}</div>
+            @endif
             <div>
-                <h2>Ekka_Lv</h2>
-                <p>{{ __('store.online_store') }}</p>
+                <h2>{{ $siteSetting?->store_name ?? 'Ekka_Lv' }}</h2>
+                <p>{{ $siteSetting?->store_tagline ?? __('store.online_store') }}</p>
             </div>
         </a>
 
@@ -17,11 +21,14 @@
             <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">{{ __('store.home') }}</a>
             <div class="nav-dropdown">
                 <a href="#" class="nav-dropdown-trigger {{ request()->routeIs('category.products') ? 'active' : '' }}">
-                    {{ __('store.category') }} <i class="fa-solid fa-chevron-down" style="font-size:11px; margin-left:4px;"></i>
+                    {{ __('store.category') }} <i class="fa-solid fa-chevron-down" style="font-size:10px; margin-left:4px;"></i>
                 </a>
                 <div class="nav-dropdown-menu">
                     @foreach($navCategories as $cat)
-                        <a href="{{ route('category.products', $cat->slug ?? $cat->id) }}" class="nav-dropdown-item">{{ $cat->name }}</a>
+                        <a href="{{ route('category.products', $cat->slug ?? $cat->id) }}" class="nav-dropdown-item">
+                            <i class="fa-solid fa-tag" style="font-size:12px;color:var(--text-faint);"></i>
+                            {{ $cat->name }}
+                        </a>
                     @endforeach
                 </div>
             </div>
@@ -38,7 +45,7 @@
                     @else
                         <img src="https://flagcdn.com/w40/us.png" alt="EN" class="flag-img">
                     @endif
-                    <i class="fa-solid fa-chevron-down" style="font-size:9px; color:#8b7769;"></i>
+                    <i class="fa-solid fa-chevron-down" style="font-size:9px; color:var(--text-faint);"></i>
                 </button>
                 <div class="lang-flag-menu">
                     <form action="{{ route('language.switch') }}" method="POST" id="lang-switch-form">
@@ -71,14 +78,14 @@
 
             @auth
             <div class="header-icon-btn user-btn" style="position:relative; cursor:pointer;" onclick="this.querySelector('.user-dropdown').classList.toggle('open')">
-                <i class="fa-regular fa-user"></i>
+                <div class="customer-avatar" style="width:28px;height:28px;font-size:12px;border-radius:8px;">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                 <span>{{ Auth::user()->name }}</span>
-                <div class="user-dropdown" style="display:none; position:absolute; top:100%; right:0; background:#fff; border:1px solid #f2e7dc; border-radius:8px; min-width:140px; z-index:100; box-shadow:0 4px 16px rgba(0,0,0,.08);">
-                    <a href="{{ route('customer.profile') }}" style="display:block; padding:10px 16px; color:#2f241f; text-decoration:none; font-size:14px;">{{ __('store.my_profile') }}</a>
-                    <a href="{{ route('customer.orders') }}" style="display:block; padding:10px 16px; color:#2f241f; text-decoration:none; font-size:14px;">{{ __('store.my_orders') }}</a>
+                <div class="user-dropdown" style="display:none; position:absolute; top:100%; right:0; min-width:180px; z-index:600;">
+                    <a href="{{ route('customer.profile') }}"><i class="fa-regular fa-user" style="width:16px;"></i> {{ __('store.my_profile') }}</a>
+                    <a href="{{ route('customer.orders') }}"><i class="fa-solid fa-bag-shopping" style="width:16px;"></i> {{ __('store.my_orders') }}</a>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" style="width:100%; text-align:left; padding:10px 16px; background:none; border:none; color:#e05a2b; font-size:14px; cursor:pointer;">{{ __('store.logout') }}</button>
+                        <button type="submit"><i class="fa-solid fa-right-from-bracket" style="width:16px;color:var(--danger);"></i> {{ __('store.logout') }}</button>
                     </form>
                 </div>
             </div>
@@ -88,6 +95,11 @@
                 <span>{{ __('store.login') }}</span>
             </a>
             @endauth
+
+            {{-- Mobile hamburger --}}
+            <button class="mobile-menu-btn" onclick="openMobileNav()" style="display:none;">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </div>
 </header>

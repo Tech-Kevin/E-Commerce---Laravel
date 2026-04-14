@@ -1,8 +1,8 @@
 <aside class="vendor-sidebar">
     <div class="vendor-brand">
-        <div class="vendor-brand-icon">D</div>
+        <div class="vendor-brand-icon">{{ strtoupper(substr(($siteSetting?->store_name ?? 'D'), 0, 1)) }}</div>
         <div class="vendor-brand-text">
-            <h2>Ekka_Lv</h2>
+            <h2>{{ $siteSetting?->store_name ?? 'Ekka_Lv' }}</h2>
             <p>{{ __('delivery.delivery_hub') }}</p>
         </div>
     </div>

@@ -153,4 +153,19 @@ return [
     'secure_payments_text' => 'Trusted and safe checkout process',
     'easy_returns'      => 'Easy Returns',
     'easy_returns_text' => 'Simple return process for eligible products',
+
+    // Footer
+    'footer_about_default' => 'Your one-stop destination for quality products at great prices. We deliver happiness to your doorstep.',
+    'quick_links'       => 'Quick Links',
+    'customer_service'  => 'Customer Service',
+    'shipping_policy'   => 'Shipping Policy',
+    'returns_policy'    => 'Returns & Refunds',
+    'faq'               => 'FAQ',
+    'contact_us'        => 'Contact Us',
+    'secure_checkout'   => 'Secure checkout guaranteed',
+
+    // Extra
+    'confirmation'      => 'Confirmation',
+    'edit_profile'      => 'Edit Profile',
+    'units'             => 'units',
 ];

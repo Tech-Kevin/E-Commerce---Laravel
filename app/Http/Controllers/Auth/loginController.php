@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Login;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Support\Facades\Validator;
 class loginController extends Controller
 {
     public function loginForm()
@@ -18,19 +15,32 @@ class loginController extends Controller
     public function login(Login $request)
     {
         $credentials = $request->validated();
-         
+
         if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
             $user = Auth::user();
+
+            if (!$user->is_active) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return redirect()->route('loginForm')
+                    ->withInput($request->only('email'))
+                    ->with('error', 'Admin has blocked you contact to admin');
+            }
 
             if ($user->role == 'customer') {
                 return redirect()->intended(route('home'));
-            } elseif ($user->role == 'vendor') {
+            } elseif (in_array($user->role, ['vendor', 'admin'], true)) {
                 return redirect()->intended(route('vendor.dashboard'));
             } elseif ($user->role == 'delivery') {
                 return redirect()->intended(route('delivery.dashboard'));
             }
-        } else {
-            return redirect()->route('loginForm')->with('error', 'Invalid credentials');
         }
+
+        return redirect()->route('loginForm')
+            ->withInput($request->only('email'))
+            ->with('error', 'Invalid credentials');
     }
 }

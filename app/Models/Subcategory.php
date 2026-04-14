@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subcategory extends Model
 {
-    protected $fillable = ['name', 'slug', 'status'];
+    protected $fillable = ['name', 'slug', 'status', 'category_id'];
 
-    public function subcategories(): HasMany
+    public function category()
     {
-        return $this->hasMany(Subcategory::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function products(): HasMany

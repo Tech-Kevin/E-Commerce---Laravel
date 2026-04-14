@@ -18,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('loginForm'));
         $middleware->redirectUsersTo(function () {
             $user = auth()->user();
-            if ($user?->role === 'vendor') return route('vendor.dashboard');
+            if (in_array($user?->role, ['vendor', 'admin'], true)) return route('vendor.dashboard');
             if ($user?->role === 'delivery') return route('delivery.dashboard');
             return route('home');
         });
