@@ -8,10 +8,12 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\SiteSetting;
 use App\Models\User;
+use App\Services\OrderCancellationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class VendorController extends Controller
@@ -56,6 +58,35 @@ class VendorController extends Controller
         }
 
         return response()->json(['success' => true, 'status' => $order->status]);
+    }
+
+    public function cancelOrder(Request $request, Order $order, OrderCancellationService $service)
+    {
+        $data = $request->validate([
+            'cancellation_reason' => 'required|string|min:5|max:500',
+        ]);
+
+        if (!$order->canBeCancelled()) {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot cancel an order in status '{$order->status}'.",
+            ], 422);
+        }
+
+        try {
+            $service->cancel($order, $data['cancellation_reason'], 'vendor');
+        } catch (\DomainException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+        } catch (\Throwable $e) {
+            Log::error('Vendor cancel failed: ' . $e->getMessage(), ['order' => $order->order_number]);
+            return response()->json(['success' => false, 'message' => 'Cancellation failed.'], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'status' => 'cancelled',
+            'message' => "Order #{$order->order_number} cancelled.",
+        ]);
     }
 
     public function assignDeliveryBoy(Request $request, Order $order)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\OrderCancellationService;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -166,6 +167,35 @@ class OrderController extends Controller
     {
         $orders = Auth::user()->orders()->with('items')->latest()->get();
         return view('customer.orders', compact('orders'));
+    }
+
+    public function cancel(Request $request, Order $order, OrderCancellationService $service)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'cancellation_reason' => 'required|string|min:5|max:500',
+        ]);
+
+        if (!$order->canBeCancelled()) {
+            return redirect()->route('customer.orders')
+                ->with('error', 'This order can no longer be cancelled.');
+        }
+
+        try {
+            $service->cancel($order, $data['cancellation_reason'], 'customer');
+        } catch (\DomainException $e) {
+            return redirect()->route('customer.orders')->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('Customer cancel failed: ' . $e->getMessage(), ['order' => $order->order_number]);
+            return redirect()->route('customer.orders')
+                ->with('error', 'Something went wrong cancelling the order.');
+        }
+
+        return redirect()->route('customer.orders')
+            ->with('success', "Order #{$order->order_number} cancelled.");
     }
 
     // --- Helper methods ---

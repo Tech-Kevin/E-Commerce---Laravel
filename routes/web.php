@@ -7,12 +7,16 @@ use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\HomeController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\WishlistController;
+use App\Http\Controllers\Customer\ReviewController;
+use App\Http\Controllers\Customer\SupportTicketController;
+use App\Http\Controllers\Customer\NotificationController;
 use App\Http\Controllers\delivery\DeliveryController;
 use App\Http\Controllers\vendor\CategoryController;
 use App\Http\Controllers\vendor\ProductController;
 use App\Http\Controllers\vendor\SaleController;
 use App\Http\Controllers\vendor\SuperAdminController;
 use App\Http\Controllers\vendor\VendorController;
+use App\Http\Controllers\vendor\CouponController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +65,7 @@ Route::prefix('customer')->middleware(['customer', 'set-locale'])->group(functio
     Route::get('/checkout', [HomeController::class, 'ShowCheckout'])->name('customer.checkout');
     Route::post('/checkout/place', [OrderController::class, 'placeOrder'])->name('order.place');
     Route::get('/orders', [OrderController::class, 'index'])->name('customer.orders');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('customer.order.cancel');
     Route::post('/razorpay/verify', [OrderController::class, 'razorpayVerify'])->name('razorpay.verify');
     Route::get('/razorpay/cancel', [OrderController::class, 'razorpayCancel'])->name('razorpay.cancel');
 
@@ -72,6 +77,25 @@ Route::prefix('customer')->middleware(['customer', 'set-locale'])->group(functio
     Route::get('/wishlist', [CustomerController::class, 'ShowWishlist'])->name('customer.wishlist');
     Route::post('/wishlist/toggle/{id}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
     Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+
+    // Reviews
+    Route::post('/reviews/{productId}', [ReviewController::class, 'store'])->name('review.store');
+    Route::delete('/reviews/{reviewId}', [ReviewController::class, 'destroy'])->name('review.destroy');
+
+    // Support Tickets
+    Route::get('/support', [SupportTicketController::class, 'index'])->name('support.index');
+    Route::get('/support/create', [SupportTicketController::class, 'create'])->name('support.create');
+    Route::post('/support', [SupportTicketController::class, 'store'])->name('support.store');
+    Route::get('/support/{ticketId}', [SupportTicketController::class, 'show'])->name('support.show');
+    Route::post('/support/{ticketId}/reply', [SupportTicketController::class, 'reply'])->name('support.reply');
+    Route::patch('/support/{ticketId}/close', [SupportTicketController::class, 'close'])->name('support.close');
+
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{notificationId}/read', [NotificationController::class, 'markAsRead'])->name('notification.read');
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::delete('/notifications/{notificationId}', [NotificationController::class, 'delete'])->name('notification.delete');
+    Route::get('/notifications/unread', [NotificationController::class, 'getUnread'])->name('notifications.unread');
 });
 
 // Delivery routes — login required
@@ -104,9 +128,18 @@ Route::prefix('vendor')->middleware('vendor')->group(function () {
     Route::put('sales/{id}', [SaleController::class, 'update'])->name('vendor.sales.update');
     Route::delete('sales/{id}', [SaleController::class, 'destroy'])->name('vendor.sales.destroy');
 
+    // Coupons
+    Route::get('coupons', [CouponController::class, 'index'])->name('vendor.coupons.index');
+    Route::get('coupons/create', [CouponController::class, 'create'])->name('vendor.coupons.create');
+    Route::post('coupons', [CouponController::class, 'store'])->name('vendor.coupons.store');
+    Route::get('coupons/{couponId}/edit', [CouponController::class, 'edit'])->name('vendor.coupons.edit');
+    Route::put('coupons/{couponId}', [CouponController::class, 'update'])->name('vendor.coupons.update');
+    Route::delete('coupons/{couponId}', [CouponController::class, 'destroy'])->name('vendor.coupons.destroy');
+
     Route::get('orders', [VendorController::class, 'ShowOrders'])->name('vendor.orders');
     Route::patch('orders/{order}/status', [VendorController::class, 'updateOrderStatus'])->name('vendor.order.status');
     Route::patch('orders/{order}/assign-delivery', [VendorController::class, 'assignDeliveryBoy'])->name('vendor.order.assign.delivery');
+    Route::post('orders/{order}/cancel', [VendorController::class, 'cancelOrder'])->name('vendor.order.cancel');
     Route::get('users', [VendorController::class, 'ShowUsers'])->name('vendor.users.index');
     Route::patch('users/{user}', [VendorController::class, 'updateManagedUser'])->name('vendor.users.update');
     Route::delete('users/{user}', [VendorController::class, 'destroyManagedUser'])->name('vendor.users.destroy');

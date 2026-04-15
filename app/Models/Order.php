@@ -22,7 +22,21 @@ class Order extends Model
         'payment_method',
         'payment_status',
         'razorpay_payment_id',
+        'cancellation_reason',
+        'cancelled_at',
+        'cancelled_by',
     ];
+
+    protected $casts = [
+        'cancelled_at' => 'datetime',
+    ];
+
+    public const CANCELLABLE_STATUSES = ['pending', 'processing'];
+
+    public function canBeCancelled(): bool
+    {
+        return in_array($this->status, self::CANCELLABLE_STATUSES, true);
+    }
 
     public function user()
     {
@@ -42,5 +56,15 @@ class Order extends Model
     public function deliveryOtps()
     {
         return $this->hasMany(DeliveryOtp::class);
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function returnRequest()
+    {
+        return $this->hasOne(ProductReturn::class);
     }
 }

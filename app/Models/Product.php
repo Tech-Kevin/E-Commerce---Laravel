@@ -65,6 +65,16 @@ class Product extends Model implements HasMedia
         return $this->hasMany(Sale::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function stock()
+    {
+        return $this->hasOne(Stock::class);
+    }
+
     public function activeSale()
     {
         return $this->hasOne(Sale::class)

@@ -79,6 +79,13 @@
                                         <i class="fa-solid fa-rotate-left"></i>
                                     </button>
                                 @endif
+                                @if($order->canBeCancelled())
+                                    <button type="button" class="sa-btn sa-btn-ghost js-sa-cancel" title="Cancel order"
+                                            data-url="{{ route('vendor.order.cancel', $order->id) }}"
+                                            data-order="{{ $order->order_number }}">
+                                        <i class="fa-solid fa-circle-xmark" style="color:#ef4444;"></i>
+                                    </button>
+                                @endif
                                 <form action="{{ route('vendor.orders.destroy', $order->id) }}" method="POST"
                                       onsubmit="return confirm('Permanently delete order #{{ $order->order_number }}?');"
                                       style="display:inline">
@@ -128,6 +135,38 @@
                 if (!confirm('Refund this order? It will also be marked cancelled.')) return;
                 const data = await patch(btn.dataset.url);
                 if (data.success) location.reload();
+            });
+        });
+
+        document.querySelectorAll('.js-sa-cancel').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const orderNumber = btn.dataset.order;
+                const reason = prompt(`Cancel order #${orderNumber}?\n\nEnter a reason (min 5 chars):`);
+                if (reason === null) return;
+                if (!reason || reason.trim().length < 5) {
+                    alert('Please provide a reason of at least 5 characters.');
+                    return;
+                }
+
+                try {
+                    const res = await fetch(btn.dataset.url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ cancellation_reason: reason.trim() }),
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Failed to cancel order.');
+                    }
+                } catch (err) {
+                    alert('Request failed: ' + err.message);
+                }
             });
         });
     })();
